@@ -1,0 +1,12 @@
+## pychecker --only -# 25 --exec --tuple --var --unreachable --callattr --shadowbuiltin --deprecated --varlist __version__,__warningregistry__,__all__,__credits__,__test__,__author__,__email__,__revision__,__id__,__copyright__,__license__,__date__,absolute_import,division,print_function,unicode_literals,ascii,filter,hex,map,oct,zip --rcfile >> .pycheckrc
+## .pycheckrc cur dir or ~/.pycheckrc
+only = True
+limit = 25
+usesExec = True
+unusedLocalTuple = True
+allVariablesUsed = True
+unreachableCode = True
+callingAttribute = True
+shadowBuiltins = False
+variablesToIgnore = ['__version__', '__warningregistry__', '__all__', '__credits__', '__test__', '__author__', '__email__', '__revision__', '__id__', '__copyright__', '__license__', '__date__', 'absolute_import', 'division', 'print_function', 'unicode_literals', 'ascii', 'filter', 'hex', 'map', 'oct', 'zip']
+deprecated = False
