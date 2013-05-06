@@ -1,0 +1,57 @@
+{
+    "name": "{{cookiecutter.parent}}.{{cookiecutter.project}}",
+    "version": "{{cookiecutter.version}}",
+    "description": "{{cookiecutter.description}}",
+    "long_description_content_type": "text/x-rst",
+    "url": "https://{{cookiecutter.repohost}}/{{cookiecutter.repoacct}}/{{cookiecutter.parent}}",
+    "author": "{{cookiecutter.author.replace('\"', '\\\"')}}",
+    "author_email": "{{cookiecutter.email}}",
+    "maintainer": "{{cookiecutter.maintainer}}",
+    "maintainer_email": "{{cookiecutter.maintaineremail}}",
+    "license": "{{cookiecutter.license}}",
+    "download_url": "https://{{cookiecutter.repohost}}/{{cookiecutter.repoacct}}/{{cookiecutter.parent}}/{% if 'bitbucket.org' == cookiecutter.repohost %}get{% else %}archive{% endif %}/master.zip",
+    "keywords": ["demo", "development", "{{cookiecutter.project}}"],
+    "platforms": ["any"],
+    "setup_requires": ["wheel", "future"
+{% if 'pytest' == cookiecutter.testfrwk %}
+        , "pytest", "pytest-timeout", "pytest-runner"
+{% elif 'nose2' == cookiecutter.testfrwk %}
+        , "nose2"
+{% endif %}
+        , "cffi>=0.6"
+    ],
+    "tests_require": [
+{% if 'pytest' == cookiecutter.testfrwk %}
+        "pytest", "pytest-timeout"
+{% elif 'nose2' == cookiecutter.testfrwk %}
+        "nose2"
+{% endif %}
+    ],
+    "install_requires": ["future"
+{% if 'pytest' == cookiecutter.testfrwk %}
+        , "pytest", "pytest-timeout"
+{% elif 'nose2' == cookiecutter.testfrwk %}
+        , "nose2"
+{% endif %}
+        , "cffi>=0.6"
+    ],
+    "extras_require": {
+        ":python_version=='2.6'": ["argparse"],
+        "test": [],
+        "dev": ["check-manifest>=0.12.0"]
+    },
+    "zip_safe": true,
+    "include_package_data": true,
+    "scripts": [
+    ],
+{% if 'yes' != cookiecutter.executable %}
+    "entry_points": {}
+{% else %}
+    "entry_points": {
+        "console_scripts": [
+            "{{cookiecutter.parent}} = {{cookiecutter.parent}}.{{cookiecutter.project}}.cli:main",
+            "main = {{cookiecutter.parent}}.{{cookiecutter.project}}.cli:main"
+        ]
+    }
+{% endif %}
+}

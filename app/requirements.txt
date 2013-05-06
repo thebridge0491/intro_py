@@ -1,0 +1,8 @@
+future
+wheel
+#pytest
+#pytest-timeout
+#pytest-runner
+#nose2
+cffi>=0.6
+-r requirements-internal.txt

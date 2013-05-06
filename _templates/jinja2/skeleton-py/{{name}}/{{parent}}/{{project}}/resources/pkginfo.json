@@ -1,0 +1,57 @@
+{
+    "name": "{{parent}}.{{project}}",
+    "version": "{{version}}",
+    "description": "{{description}}",
+    "long_description_content_type": "text/x-rst",
+    "url": "https://{{repohost}}/{{repoacct}}/{{parent}}",
+    "author": "{{author.replace('\"', '\\\"')}}",
+    "author_email": "{{email}}",
+    "maintainer": "{{maintainer}}",
+    "maintainer_email": "{{maintaineremail}}",
+    "license": "{{license}}",
+    "download_url": "https://{{repohost}}/{{repoacct}}/{{parent}}/{% if 'bitbucket.org' == repohost %}get{% else %}archive{% endif %}/master.zip",
+    "keywords": ["demo", "development", "{{project}}"],
+    "platforms": ["any"],
+    "setup_requires": ["wheel", "future"
+{% if 'pytest' == testfrwk %}
+        , "pytest", "pytest-timeout", "pytest-runner"
+{% elif 'nose2' == testfrwk %}
+        , "nose2"
+{% endif %}
+        , "cffi>=0.6"
+    ],
+    "tests_require": [
+{% if 'pytest' == testfrwk %}
+        "pytest", "pytest-timeout"
+{% elif 'nose2' == testfrwk %}
+        "nose2"
+{% endif %}
+    ],
+    "install_requires": ["future"
+{% if 'pytest' == testfrwk %}
+        , "pytest", "pytest-timeout"
+{% elif 'nose2' == testfrwk %}
+        , "nose2"
+{% endif %}
+        , "cffi>=0.6"
+    ],
+    "extras_require": {
+        ":python_version=='2.6'": ["argparse"],
+        "test": [],
+        "dev": ["check-manifest>=0.12.0"]
+    },
+    "zip_safe": true,
+    "include_package_data": true,
+    "scripts": [
+    ],
+{% if 'yes' != executable %}
+    "entry_points": {}
+{% else %}
+    "entry_points": {
+        "console_scripts": [
+            "{{parent}} = {{parent}}.{{project}}.cli:main",
+            "main = {{parent}}.{{project}}.cli:main"
+        ]
+    }
+{% endif %}
+}

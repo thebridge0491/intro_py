@@ -1,0 +1,11 @@
+future
+wheel
+{% if 'pytest' == testfrwk %}
+pytest
+pytest-timeout
+pytest-runner
+{% elif 'nose2' == testfrwk %}
+nose2
+{% endif %}
+cffi>=0.6
+-r requirements-internal.txt

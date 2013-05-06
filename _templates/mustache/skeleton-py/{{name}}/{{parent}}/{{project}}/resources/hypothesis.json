@@ -1,0 +1,6 @@
+{
+    "max_examples": 200,
+    "max_iterations": 1000,
+    "timeout": 60,
+    "verbosity": "normal"
+}

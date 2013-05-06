@@ -1,0 +1,30 @@
+= {{cookiecutter.parentcap}}
+:description: README for {{cookiecutter.parent}}
+:hardbreaks:
+:linkcss:
+//:stylesheet!:
+
+////
+.adoc to .html: asciidoctor -n -a toc -a toclevels=2 foo.adoc
+////
+
+{{cookiecutter.parentdescription}}
+
+== Installation
+source code tarball download:
+    
+        # [aria2c --check-certificate=false | wget --no-check-certificate | curl -kOL]
+        FETCHCMD='aria2c --check-certificate=false'
+        $FETCHCMD https://{{cookiecutter.repohost}}/{{cookiecutter.repoacct}}/{{cookiecutter.parent}}/[get | archive]/master.zip
+
+version control repository clone:
+        
+        git clone https://{{cookiecutter.repohost}}/{{cookiecutter.repoacct}}/{{cookiecutter.parent}}.git
+
+== Author/Copyright
+Author: {{cookiecutter.author}} <{{cookiecutter.email}}>
+
+see sub-package's Author/Copyright
+
+== License
+see sub-package's License

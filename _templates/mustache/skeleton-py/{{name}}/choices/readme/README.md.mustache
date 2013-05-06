@@ -1,0 +1,53 @@
+# {{parentcap}}{{^parentcap}}Intro_py{{/parentcap}}{{joiner}}{{^joiner}}.{{/joiner}}{{projectcap}}{{^projectcap}}Util{{/projectcap}}
+<!-- .md to .html: markdown foo.md > foo.html
+                   pandoc -s -f markdown_strict -t html5 -o foo.html foo.md -->
+
+{{description}}{{^description}}Utilites sub-package for Python Intro examples project.{{/description}}
+
+## Installation
+source code tarball download:
+    
+        # [aria2c --check-certificate=false | wget --no-check-certificate | curl -kOL]
+        FETCHCMD='aria2c --check-certificate=false'
+        $FETCHCMD https://{{repohost}}{{^repohost}}bitbucket.org{{/repohost}}/{{repoacct}}{{^repoacct}}imcomputer{{/repoacct}}/{{parent}}{{^parent}}intro_py{{/parent}}/[get | archive]/master.zip
+
+version control repository clone:
+        
+        git clone https://{{repohost}}{{^repohost}}bitbucket.org{{/repohost}}/{{repoacct}}{{^repoacct}}imcomputer{{/repoacct}}/{{parent}}{{^parent}}intro_py{{/parent}}.git
+
+cd <path> ; pip install --user -e .
+
+python setup.py test
+
+## Usage
+{{#executable}}
+        [env RSRC_PATH=<path>/resources] python -m {{parent}}{{^parent}}intro_py{{/parent}}.{{project}}{{^project}}util{{/project}}
+
+or
+        [env RSRC_PATH=<path>/resources] python {{nesteddirs}}{{^nesteddirs}}intro_py/util{{/nesteddirs}}/cli.py
+
+or
+        [env RSRC_PATH=<path>/resources] python
+    
+        >>> from {{parent}}{{^parent}}intro_py{{/parent}}.{{project}}{{^project}}util{{/project}} import cli
+    
+        >>> cli.main([])
+{{/executable}}
+{{^executable}}
+        python -i {{nesteddirs}}{{^nesteddirs}}intro_py/util{{/nesteddirs}}/lib.py
+    
+        >>> cartesian_prod([0, 1, 2], [10, 20, 30])
+
+or
+        python
+        
+        >>> from {{parent}}{{^parent}}intro_py{{/parent}} import {{project}}{{^project}}util{{/project}}
+        
+        >>> {{project}}{{^project}}util{{/project}}.cartesian_prod([0, 1, 2], [10, 20, 30])
+{{/executable}}
+
+## Author/Copyright
+Copyright (c) {{year}}{{^year}}2013{{/year}} by {{author}}{{^author}}{{repoacct}}{{^repoacct}}imcomputer{{/repoacct}}{{/author}} <{{email}}{{^email}}{{repoacct}}{{^repoacct}}imcomputer{{/repoacct}}-codelab@yahoo.com{{/email}}>
+
+## License
+Licensed under the {{license}}{{^license}}Apache-2.0{{/license}} License. See LICENSE for details.

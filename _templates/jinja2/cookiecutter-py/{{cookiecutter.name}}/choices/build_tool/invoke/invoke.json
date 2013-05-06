@@ -1,0 +1,8 @@
+{
+    "proj_name": "{{cookiecutter.parent}}{{cookiecutter.separator}}{{cookiecutter.project}}",
+    "debug": true,
+    "run": {
+        "echo": true
+    }
+}
+

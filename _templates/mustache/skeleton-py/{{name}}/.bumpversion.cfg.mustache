@@ -1,0 +1,12 @@
+## .bumpversion.cfg in cur dir
+## or [bumpversion[:___]] section in setup.cfg
+[bumpversion]
+current_version = {{version}}{{^version}}0.1.0{{/version}}
+commit = True
+tag = True
+
+[bumpversion:file:{{nesteddirs}}{{^nesteddirs}}intro_py/util{{/nesteddirs}}/resources/pkginfo.json]
+#search = __version__ = '{current_version}'
+#replace = __version__ = '{new_version}'
+search = "version": "{current_version}"
+replace = "version": "{new_version}"
