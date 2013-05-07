@@ -132,7 +132,17 @@ check_perl() {
 			sed -n "/sub advanced${prob}/,/sub .*/p" \
 				${pathSet}/${instructor}.pl ;
 		else
-			echo "Output differs: " ; echo "${res}" ;
+			cat /tmp/.show${prob} | sort > /tmp/.sortshow${prob} ;
+			cat /tmp/.test${prob} | sort > /tmp/.sorttest${prob} ;
+			res=`diff ${diff_opts} /tmp/.sortshow${prob} /tmp/.sorttest${prob}` ;
+			
+			if [ "" = "${res}" ] ; then
+				echo "Correct Result - My solution follows: " ; echo "" ;
+				sed -n "/sub advanced${prob}/,/sub .*/p" \
+					${pathSet}/${instructor}.pl ;
+			else
+				echo "Output differs: " ; echo "${res}" ;
+			fi ;
 		fi ;
 	fi
 }

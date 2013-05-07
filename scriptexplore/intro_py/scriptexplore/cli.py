@@ -65,7 +65,7 @@ def parse_cmdopts(args=None):
     #opts_parser.add_argument('-S', '--simple', action = 'store_true',
     #    default = False, help = 'select simple module')
     opts_parser.add_argument('-m', '--mod', action = 'store', type = str,
-        default = 'simple', choices = [None, 'simple'],
+        default = 'simple', choices = [None, 'simple', 'advanced'],
         dest = 'mod', help = 'select run module')
     opts_parser.add_argument('rest', nargs=argparse.REMAINDER)
 
