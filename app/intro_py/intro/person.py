@@ -33,7 +33,7 @@ class Person(object):
 #        return hash(self.name) ^ hash(self.age)
 
     def __str__(self):
-        return '{0}\{\{name: {1}, age: {2}\}\}'.format(
+        return '{0}{{name: {1}, age: {2}}}'.format(
             self.__class__.__name__, self.name, self.age)
 
     def __repr__(self):

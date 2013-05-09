@@ -11,11 +11,12 @@ if __package__ in ['', None]:
 
 from future.builtins import map, str
 
+from intro_py import util
 from .lib import *
 
 
 _rsrc_path = os.environ.get('RSRC_PATH')
-_json_str = read_resource('pkginfo.json', rsrc_path=_rsrc_path)
+_json_str = util.read_resource('pkginfo.json', rsrc_path=_rsrc_path)
 pkginfo = json.loads(_json_str) if _json_str is not None else {}
 
 __version__ = pkginfo['version']    # __version__ = 'X.Y.Z'

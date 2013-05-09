@@ -10,7 +10,9 @@ import os, sys, argparse, json
 import logging, inspect
 from future.builtins import (ascii, filter, hex, map, oct, zip, str, open, dict)
 
-from intro_py import intro
+from intro_py import util, intro
+from intro_py.intro import person
+from intro_py.practice import classic, sequenceops as seqops
 
 __all__ = ['main']
 
@@ -50,12 +52,63 @@ def deserialize_str(str1, fmt='json'):
 				print(repr(exc))
 	return {}
 
-def run_intro(name):
-    import re
+def run_intro(opts, rsrc_path=None):
+    import random, re
+    from datetime import datetime
+
+    user1 = {'name': opts['user'], 'num': opts['num'], 
+		'time_in': datetime.now()}
+
+    num_arr, num_i, delay_secs = [0b1011, 0o13, 0xb, 11], 0, 2.5
+
+    pers1 = person.Person('I.M. Computer', 32)
+
+    for num in num_arr:
+        num_i += num
+    assert (len(num_arr) * num_arr[0]) == num_i
+
+    ch = intro.delay_char(delay_secs)
+
+    random.seed()
+    if 0 == user1['num']:
+        user1['num'] = random.randrange(0, 19)
 
     rexp = re.compile('(^quit$)', re.I)
-    print('{0} match: {1} to {2}'.format('Good' if rexp.match(name)
-        else 'Does not', name, rexp.pattern))
+    print('{0} match: {1} to {2}'.format('Good' if rexp.match(user1['name'])
+        else 'Does not', user1['name'], rexp.pattern))
+
+    greet_str = intro.greeting('greet.txt', user1['name'], rsrc_path=rsrc_path)
+    print('{0}\n{1}'.format(user1['time_in'].strftime('%c'), greet_str))
+
+    time_diff = (datetime.now() - user1['time_in']).total_seconds()
+    print('(program {0}) Took {1:.1f} seconds.'.format(__name__, time_diff))
+
+    print('#' * 40)
+
+    xss = [2, 3, 1, 4, 0]
+    if opts['is_expt2']:
+        print('classic.expt_i({0}, {1}): {2}'.format(2.0, float(user1['num']),
+            classic.expt_i(2.0, float(user1['num']))))
+        print('seqops.reverse_i({0}): {1}'.format(xss, seqops.reverse_i(xss)))
+        print('sorted({0}): {1}'.format(xss, sorted(xss)))
+    else:
+        print('classic.fact_i({0}): {1}'.format(user1['num'],
+            classic.fact_i(user1['num'])))
+        el = 3
+        print('seqops.index_i({0}, {1}): {2}'.format(el, xss,
+            seqops.index_i(el, xss)))
+        print('{0}.append({1}): '.format(xss, 50), end='')
+        xss.append(50)
+        print(xss)
+
+    print('#' * 40)
+
+    print('#' * 40)
+
+    print('pers1.age:', pers1.age)
+    pers1.age = 33
+    print('str(pers1):', pers1)
+    print('repr(pers1):', repr(pers1))
 
 def parse_cmdopts(args=None):
     func_name = inspect.stack()[0][3]
@@ -71,6 +124,10 @@ def parse_cmdopts(args=None):
         dest = 'log_opt', help = 'Set logging config')
     opts_parser.add_argument('-u', '--user', action = 'store', type = str,
         default = 'World', help = 'set name')
+    opts_parser.add_argument('-n', '--num', action = 'store', type = int,
+        default = 0, help = 'set num')
+    opts_parser.add_argument('-2', '--is_expt2', action = 'store_true',
+        default = False, help = 'compute expt 2 vice factorial')
 
     return opts_parser.parse_args(args)
 
@@ -85,36 +142,33 @@ def main(argv=None):
     '''
     
     rsrc_path = os.environ.get('RSRC_PATH')
-    logjson_str = intro.read_resource('logging.json', rsrc_path=rsrc_path)
+    logjson_str = util.read_resource('logging.json', rsrc_path=rsrc_path)
     log_cfg = deserialize_str(logjson_str, fmt='json')
-    intro.config_logging('info', 'cfg', log_cfg)
+    util.config_logging('info', 'cfg', log_cfg)
     opts_hash = parse_cmdopts(argv)
-    intro.config_logging(opts_hash.log_lvl, opts_hash.log_opt, log_cfg)
+    util.config_logging(opts_hash.log_lvl, opts_hash.log_opt, log_cfg)
     MODULE_LOGGER.info('main()')
 
     cfg_blank = {'hostname':'???', 'domain':'???', 'file1':{'path':'???', 
 		'ext':'txt'}, 'user1':{'name':'???', 'age': -1}}
     cfg_ini = dict(cfg_blank.items())
-    cfg_ini.update(intro.ini_to_dict(intro.read_resource('prac.conf',
+    cfg_ini.update(util.ini_to_dict(util.read_resource('prac.conf',
 		rsrc_path=rsrc_path)).items())
-    cfg_json = dict(cfg_blank.items())
-    cfg_json.update(deserialize_str(intro.read_resource(
-	'prac.json',
-		rsrc_path=rsrc_path)).items())
-    cfg_yaml = dict(cfg_blank.items())
-    cfg_yaml.update(deserialize_str(intro.read_resource(
-	'prac.yaml',
-		rsrc_path=rsrc_path), fmt='yaml').items())
-    cfg_toml = dict(cfg_blank.items())
-    cfg_toml.update(deserialize_str(intro.read_resource(
-	'prac.toml',
-		rsrc_path=rsrc_path), fmt='toml').items())
+    #cfg_json = dict(cfg_blank.items())
+    #cfg_json.update(deserialize_str(util.read_resource('prac.json',
+	#	rsrc_path=rsrc_path)).items())
+    #cfg_yaml = dict(cfg_blank.items())
+    #cfg_yaml.update(deserialize_str(util.read_resource('prac.yaml',
+	#	rsrc_path=rsrc_path), fmt='yaml').items())
+    #cfg_toml = dict(cfg_blank.items())
+    #cfg_toml.update(deserialize_str(util.read_resource('prac.toml',
+	#	rsrc_path=rsrc_path), fmt='toml').items())
     
     tup_arr = [
         (cfg_ini, cfg_ini['domain'], cfg_ini['user1']['name'])
-        , (cfg_json, cfg_json['domain'], cfg_json['user1']['name'])
-        , (cfg_yaml, cfg_yaml['domain'], cfg_yaml['user1']['name'])
-        , (cfg_toml, cfg_toml['domain'], cfg_toml['user1']['name'])
+        #, (cfg_json, cfg_json['domain'], cfg_json['user1']['name'])
+        #, (cfg_yaml, cfg_yaml['domain'], cfg_yaml['user1']['name'])
+        #, (cfg_toml, cfg_toml['domain'], cfg_toml['user1']['name'])
     ]
     
     for (cfg, domain, user1Name) in tup_arr:
@@ -122,7 +176,7 @@ def main(argv=None):
         print('domain: {0}'.format(domain))
         print('user1Name: {0}'.format(user1Name))
     print('')
-    run_intro(opts_hash.user)
+    run_intro(vars(opts_hash), rsrc_path=rsrc_path)
 
     logging.shutdown()
     return 0

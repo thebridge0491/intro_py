@@ -16,7 +16,7 @@ from .lib import *
 
 _rsrc_path = os.environ.get('RSRC_PATH')
 _json_str = read_resource('pkginfo.json', rsrc_path=_rsrc_path)
-pkginfo = json.loads(_json_str.decode(encoding='utf-8')) if _json_str is not None else {}
+pkginfo = json.loads(_json_str) if _json_str is not None else {}
 
 __version__ = pkginfo['version']    # __version__ = 'X.Y.Z'
 __date__ = '2013-05-05'

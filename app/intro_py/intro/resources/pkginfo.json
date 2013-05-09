@@ -13,12 +13,10 @@
     "keywords": ["demo", "development", "intro"],
     "platforms": ["any"],
     "setup_requires": ["wheel", "future"
-        , "cffi>=0.6"
     ],
     "tests_require": [
     ],
-    "install_requires": ["future"
-        , "cffi>=0.6"
+    "install_requires": ["future", "intro-py.util", "intro-py.practice"
     ],
     "extras_require": {
         ":python_version=='2.6'": ["argparse"],
@@ -31,8 +29,7 @@
     ],
     "entry_points": {
         "console_scripts": [
-            "intro_py = intro_py.intro.cli:main",
-            "main = intro_py.intro.cli:main"
+            "intro_py = intro_py.intro.cli:main"
         ]
     }
 }

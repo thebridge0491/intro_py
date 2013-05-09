@@ -21,7 +21,8 @@ def read_resource(filepath, pkg_or_mod=__name__, rsrc_path=None):
 	try:
 		if rsrc_path is None:
 			#output = pkg_resources.resource_string(pkg_or_mod, 'resources/' + filepath)
-			output = pkgutil.get_data(pkg_or_mod, 'resources/' + filepath)
+			output = pkgutil.get_data(pkg_or_mod, 'resources/' + filepath
+				).decode(encoding='utf-8')
 		else:
 			with open(os.path.join(rsrc_path, filepath)) as fIn:
 				output = fIn.read()
@@ -57,10 +58,10 @@ def ini_to_dict(ini_str):
         config, conf_dict = SafeConfigParser(), {}
         config.optionxform = str
         try:
-            config.read_string(ini_str.decode(encoding='utf-8'))
+            config.read_string(ini_str)
         except AttributeError:
             from io import StringIO
-            config.readfp(StringIO(ini_str.decode(encoding='utf-8')))
+            config.readfp(StringIO(ini_str))
 
     for sect in config.sections():
         if 'default' != sect:

@@ -25,10 +25,10 @@ python setup.py test
 
 Usage
 -----
-        [env RSRC_PATH=<path>/resources] python -m intro_py.intro
+        [env RSRC_PATH=<path>/resources] python -m intro_py.intro [-h]
 
 or
-        [env RSRC_PATH=<path>/resources] python intro_py/intro/cli.py
+        [env RSRC_PATH=<path>/resources] python intro_py/intro/cli.py [-h]
 
 or
         [env RSRC_PATH=<path>/resources] python

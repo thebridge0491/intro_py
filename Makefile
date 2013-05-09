@@ -7,7 +7,7 @@ help:
 PYTHON = python
 
 parent = intro_py
-SUBDIRS = common app
+SUBDIRS = common foreignc api app
 
 .PHONY: build help clean test develop install
 help: $(SUBDIRS)

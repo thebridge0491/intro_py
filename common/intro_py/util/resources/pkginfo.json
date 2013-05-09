@@ -13,12 +13,10 @@
     "keywords": ["demo", "development", "util"],
     "platforms": ["any"],
     "setup_requires": ["wheel", "future"
-        , "cffi>=0.6"
     ],
     "tests_require": [
     ],
     "install_requires": ["future"
-        , "cffi>=0.6"
     ],
     "extras_require": {
         ":python_version=='2.6'": ["argparse"],
