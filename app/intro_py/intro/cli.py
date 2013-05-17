@@ -102,6 +102,25 @@ def run_intro(opts, rsrc_path=None):
         print(xss)
 
     print('#' * 40)
+    res_pascaltri = classic.pascaltri_add(5)
+    print('classic.pascaltri_add({0}): {0}'.format(5, res_pascaltri))
+    for el in res_pascaltri:
+        print(el)
+    print()
+
+    res_hanoi = classic.hanoi(1, 2, 3, 4)
+    print('classic.hanoi(1, 2, 3, 4): {0}'.format(res_hanoi))
+    for el in classic.hanoi_moves(4, res_hanoi)[1]:
+        print(el)
+    print()
+
+    solved_nqueens = classic.nqueens(8)
+    queens_ndx = random.randrange(0, len(solved_nqueens))
+    res_nqueens = solved_nqueens[queens_ndx]
+    print('classic.nqueens(8)[{0}]: {1}'.format(queens_ndx, res_nqueens))
+    for el in classic.nqueens_grid(8, res_nqueens):
+        print('-'.join(el))
+    print()
 
     print('#' * 40)
 
