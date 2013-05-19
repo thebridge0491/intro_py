@@ -48,46 +48,58 @@ class TestSequenceops(unittest.TestCase):
         for func, cnt in [(proc_id, 5), (proc1, 5)]:
             ans_gen = map(func, count())
             ans = [next(ans_gen) for i in range(cnt)]
-            for fn1 in [seqops.tabulate_i, seqops.tabulate_r, seqops.tabulate_lp]:
+            for fn1 in [seqops.tabulate_i, seqops.tabulate_r,
+                    seqops.tabulate_lp, seqops.tabulate_f, seqops.tabulate_u,
+                    seqops.tabulate_lc, seqops.tabulate_imap]:
                 self.assertEqual(ans, fn1(func, cnt))
 
     def test_length(self):
         for xss in [list(range(len1)) for len1 in [0, 3, 5, 7]]:
             ans = len(xss)
-            for fn1 in [seqops.length_i, seqops.length_r, seqops.length_lp]:
+            for fn1 in [seqops.length_i, seqops.length_r, seqops.length_lp,
+                    seqops.length_f, seqops.length_u, seqops.length_lc]:
                 self.assertEqual(ans, fn1(xss))
 
     def test_nth(self):
         for xss in [LST, REVLST]:
             ans = xss[3]
-            for fn1 in [seqops.nth_i, seqops.nth_r, seqops.nth_lp]:
+            for fn1 in [seqops.nth_i, seqops.nth_r, seqops.nth_lp,
+                    seqops.nth_f, seqops.nth_u, seqops.nth_lc,
+                    seqops.nth_islice]:
                 self.assertEqual(ans, fn1(3, xss))
 
     def test_index(self):
         for xss in [LST, REVLST]:
             ans = xss.index(3)
-            for fn1 in [seqops.index_i, seqops.index_r, seqops.index_lp]:
+            for fn1 in [seqops.index_i, seqops.index_r, seqops.index_lp,
+                    seqops.index_f, seqops.index_u, seqops.index_lc]:
                 self.assertEqual(ans, fn1(3, xss))
                 self.assertEqual(-1, fn1(-20, xss))
 
     def test_find(self):
         for xss in [LST, REVLST]:
             ans = 3
-            for fn1 in [seqops.find_i, seqops.find_r, seqops.find_lp]:
+            for fn1 in [seqops.find_i, seqops.find_r, seqops.find_lp,
+                    seqops.find_f, seqops.find_u, seqops.find_lc]:
                 self.assertEqual(ans, fn1(3, xss))
 
     def test_min_max(self):
         for xss in [LST, REVLST]:
             ans_min, ans_max = min(xss), max(xss)
             for (fn_min, fn_max) in [(seqops.min_i, seqops.max_i),
-                    (seqops.min_r, seqops.max_r), (seqops.min_lp, seqops.max_lp)]:
+                    (seqops.min_r, seqops.max_r),
+                    (seqops.min_lp, seqops.max_lp),
+                    (seqops.min_f, seqops.max_f),
+                    (seqops.min_u, seqops.max_u),
+                    (seqops.min_lc, seqops.max_lc)]:
                 self.assertEqual(ans_min, fn_min(xss))
                 self.assertEqual(ans_max, fn_max(xss))
 
     def test_reverse(self):
         for xss in [LST, REVLST]:
             ans = list(reversed(xss[:]))
-            for fn1 in [seqops.reverse_i, seqops.reverse_r, seqops.reverse_lp]:
+            for fn1 in [seqops.reverse_i, seqops.reverse_r, seqops.reverse_lp,
+                    seqops.reverse_f, seqops.reverse_u, seqops.reverse_lc]:
                 self.assertEqual(ans, fn1(xss))
 
     def test_reverse_mut(self):
@@ -102,7 +114,8 @@ class TestSequenceops(unittest.TestCase):
     def test_copy_of(self):
         for xss in [LST, REVLST]:
             ans = xss[:]
-            for fn1 in [seqops.copy_of_i, seqops.copy_of_r, seqops.copy_of_lp]:
+            for fn1 in [seqops.copy_of_i, seqops.copy_of_r, seqops.copy_of_lp,
+                    seqops.copy_of_f, seqops.copy_of_u, seqops.copy_of_lc]:
                 self.assertEqual(ans, fn1(xss))
 
     def test_take_drop(self):
@@ -112,10 +125,16 @@ class TestSequenceops(unittest.TestCase):
             ans_drop = reduce(lambda a, i_e: a + [i_e[1]] if 3 <= i_e[0] else a,
                 enumerate(xss), [])
             for (fn_take, fn_drop) in [(seqops.take_i, seqops.drop_i),
-                    (seqops.take_lp, seqops.drop_lp)]:
+                    (seqops.take_lp, seqops.drop_lp),
+                    (seqops.take_f, seqops.drop_f),
+                    (seqops.take_u, seqops.drop_u),
+                    (seqops.take_lc, seqops.drop_lc),
+                    (seqops.take_islice, seqops.drop_islice)]:
                 self.assertEqual(ans_take, fn_take(3, xss))
                 self.assertEqual(ans_drop, fn_drop(3, xss))
-            for fn1 in [seqops.split_at_i, seqops.split_at_lp]:
+            for fn1 in [seqops.split_at_i, seqops.split_at_lp,
+                    seqops.split_at_f, seqops.split_at_u, seqops.split_at_lc,
+                    seqops.split_at_islice]:
                 res = fn1(3, xss)
                 self.assertEqual(ans_take, res[0])
                 self.assertEqual(ans_drop, res[1])
@@ -128,7 +147,9 @@ class TestSequenceops(unittest.TestCase):
             ans_any = reduce(lambda a, e: a or pred(e), xss, False)
             ans_all = reduce(lambda a, e: a and pred(e), xss, True)
             for (fn_any, fn_all) in [(seqops.any_i, seqops.all_i),
-                    (seqops.any_r, seqops.all_r), (seqops.any_lp, seqops.all_lp)]:
+                    (seqops.any_r, seqops.all_r), (seqops.any_lp, seqops.all_lp),
+                    (seqops.any_f, seqops.all_f), (seqops.any_u, seqops.all_u),
+                    (seqops.any_lc, seqops.all_lc)]:
                 self.assertEqual(ans_any, fn_any(pred, xss))
                 self.assertEqual(ans_all, fn_all(pred, xss))
 
@@ -136,14 +157,16 @@ class TestSequenceops(unittest.TestCase):
         def proc(el): return el + 2
         for xss in [LST, REVLST]:
             ans = list(map(proc, xss))
-            for fn1 in [seqops.map_i, seqops.map_r, seqops.map_lp]:
+            for fn1 in [seqops.map_i, seqops.map_r, seqops.map_lp,
+                    seqops.map_f, seqops.map_u, seqops.map_lc]:
                 self.assertEqual(ans, fn1(proc, xss))
 
     def test_foreach(self):
         def proc(el): print('{0} '.format(el))
         for xss in [LST, REVLST]:
             ans = None
-            for fn1 in [seqops.foreach_i, seqops.foreach_r, seqops.foreach_lp]:
+            for fn1 in [seqops.foreach_i, seqops.foreach_r, seqops.foreach_lp,
+                    seqops.foreach_f, seqops.foreach_u, seqops.foreach_lc]:
                 self.assertEqual(ans, fn1(proc, xss))
 
     def test_filter_remove(self):
@@ -155,11 +178,15 @@ class TestSequenceops(unittest.TestCase):
                 xss, [])
             for (fn_f, fn_r) in [(seqops.filter_i, seqops.remove_i),
                     (seqops.filter_r, seqops.remove_r),
-                    (seqops.filter_lp, seqops.remove_lp)]:
+                    (seqops.filter_lp, seqops.remove_lp),
+                    (seqops.filter_f, seqops.remove_f),
+                    (seqops.filter_u, seqops.remove_u),
+                    (seqops.filter_lc, seqops.remove_lc)]:
                 self.assertEqual(ans_filter, fn_f(pred1, xss))
                 self.assertEqual(ans_remove, fn_r(pred1, xss))
             for fn1 in [seqops.partition_i, seqops.partition_r,
-                    seqops.partition_lp]:
+                    seqops.partition_lp, seqops.partition_f,
+                    seqops.partition_u, seqops.partition_lc]:
                 res = fn1(pred1, xss)
                 self.assertEqual(ans_filter, res[0])
                 self.assertEqual(ans_remove, res[1])
@@ -220,7 +247,8 @@ class TestSequenceops(unittest.TestCase):
             ans = reduce(lambda a, i: a and xss[i] <= xss[i + 1],
                 range(len(xss) - 1), True)
             for fn1 in [seqops.is_ordered_i, seqops.is_ordered_r,
-                    seqops.is_ordered_lp]:
+                    seqops.is_ordered_lp, seqops.is_ordered_f,
+                    seqops.is_ordered_u, seqops.is_ordered_lc]:
                 self.assertEqual(ansrev, fn1(xss, reverse=True))
                 self.assertEqual(ans, fn1(xss))
 
@@ -234,7 +262,8 @@ class TestSequenceops(unittest.TestCase):
                 self.assertEqual(ansrev, lst_rev)
                 self.assertEqual(ans, lst)
                 for fn_verify in [seqops.is_ordered_i, seqops.is_ordered_r,
-                        seqops.is_ordered_lp]:
+                        seqops.is_ordered_lp, seqops.is_ordered_f,
+                        seqops.is_ordered_lc, seqops.is_ordered_u]:
                     self.assertTrue(fn_verify(lst_rev, reverse=True))
                     self.assertTrue(fn_verify(lst))
 
@@ -244,13 +273,15 @@ class TestSequenceops(unittest.TestCase):
         lst, revlst = seqops.copy_of_i(LST), seqops.copy_of_i(REVLST)
         for xss in [lst, revlst]:
             ans = (xss + lst2)
-            for fn1 in [seqops.append_i, seqops.append_r, seqops.append_lp]:
+            for fn1 in [seqops.append_i, seqops.append_r, seqops.append_lp,
+                    seqops.append_f, seqops.append_u, seqops.append_lc]:
                 self.assertEqual(ans, fn1(xss, lst2))
 
     def test_interleave(self):
         lst2 = [9, 9, 9, 9]
         for fn1 in [seqops.interleave_i, seqops.interleave_r,
-                seqops.interleave_lp]:
+                seqops.interleave_lp, seqops.interleave_f,
+                seqops.interleave_u, seqops.interleave_lc]:
             self.assertEqual([0, 9, 1, 9, 2, 9, 3, 9, 4], fn1(LST, lst2))
 
     def test_map2(self):
@@ -258,24 +289,29 @@ class TestSequenceops(unittest.TestCase):
         for xss in [LST, REVLST]:
             ans = reduce(lambda a, i: a + [proc(xss[i], xss[i])],
                 range(len(xss)), [])
-            for fn1 in [seqops.map2_i, seqops.map2_r, seqops.map2_lp]:
+            for fn1 in [seqops.map2_i, seqops.map2_r, seqops.map2_lp,
+                    seqops.map2_f, seqops.map2_u, seqops.map2_lc]:
                 self.assertEqual(ans, fn1(proc, xss, xss))
 
     def test_zip(self):
         lst1, lst2 = [0, 1, 2], [20, 30, 40]
         ans = list(zip(lst1, lst2))
-        for fn1 in [seqops.zip_i, seqops.zip_r, seqops.zip_lp]:
+        for fn1 in [seqops.zip_i, seqops.zip_r, seqops.zip_lp,
+                seqops.zip_f, seqops.zip_u, seqops.zip_lc]:
             self.assertEqual(ans, fn1(lst1, lst2))
 
     def test_unzip(self):
         lst = [(0, 20), (1, 30)]
         ans = list(zip(*lst))
-        for fn1 in [seqops.unzip_i]:
+        for fn1 in [seqops.unzip_i, seqops.unzip_f, seqops.unzip_u,
+                seqops.unzip_lc]:
             self.assertEqual(ans, fn1(lst))
 
     def test_concat(self):
         nlst1, nlst2 = [[0, 1, 2], [20, 30]], [[[0, 1]], [], [[20, 30]]]
         for nlst in [nlst1, nlst2]:
             ans = reduce(lambda a, e: a + e, nlst, [])
-            for fn1 in [seqops.concat_i, seqops.concat_r, seqops.concat_lp]:
+            for fn1 in [seqops.concat_i, seqops.concat_r, seqops.concat_lp,
+                    seqops.concat_f, seqops.concat_u, seqops.concat_lc,
+                    seqops.concat_chain]:
                 self.assertEqual(ans, fn1(nlst))

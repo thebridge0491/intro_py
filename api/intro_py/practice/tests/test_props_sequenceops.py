@@ -57,48 +57,57 @@ class TestPropsSequenceops(unittest.TestCase):
         for func, cnt in [(proc_id, cnt), (proc1, cnt)]:
             ans_gen = map(func, count())
             ans = [next(ans_gen) for i in range(cnt)]
-            for fn1 in [seqops.tabulate_i, seqops.tabulate_r, seqops.tabulate_lp]:
+            for fn1 in [seqops.tabulate_i, seqops.tabulate_r,
+                    seqops.tabulate_lp, seqops.tabulate_f, seqops.tabulate_u,
+                    seqops.tabulate_lc, seqops.tabulate_imap]:
                 self.assertEqual(ans, fn1(func, cnt))
 
     @given(st.lists(st.integers(), max_size=20))
     def test_prop_length(self, xss):
         ans = len(xss)
-        for fn1 in [seqops.length_i, seqops.length_r, seqops.length_lp]:
+        for fn1 in [seqops.length_i, seqops.length_r, seqops.length_lp,
+                seqops.length_f, seqops.length_u, seqops.length_lc]:
             self.assertEqual(ans, fn1(xss))
 
     @given(st.data(), st.lists(st.integers(), min_size=1, max_size=20))
     def test_prop_nth(self, data, xss):
         ndx = data.draw(st.sampled_from(tuple(range(len(xss)))))
         ans = xss[ndx]
-        for fn1 in [seqops.nth_i, seqops.nth_r, seqops.nth_lp]:
+        for fn1 in [seqops.nth_i, seqops.nth_r, seqops.nth_lp, seqops.nth_f,
+                seqops.nth_u, seqops.nth_lc, seqops.nth_islice]:
             self.assertEqual(ans, fn1(ndx, xss))
 
     @given(st.data(), st.lists(st.integers(), min_size=1, max_size=20))
     def test_prop_index(self, data, xss):
         data1 = data.draw(st.sampled_from(tuple(xss)))
         ans = xss.index(data1)
-        for fn1 in [seqops.index_i, seqops.index_r, seqops.index_lp]:
+        for fn1 in [seqops.index_i, seqops.index_r, seqops.index_lp,
+                seqops.index_f, seqops.index_u, seqops.index_lc]:
             self.assertEqual(ans, fn1(data1, xss))
             self.assertEqual(-1, fn1(-20, list(range(0, 20))))
 
     @given(st.data(), st.lists(st.integers(), min_size=1, max_size=20))
     def test_prop_find(self, data, xss):
         data1 = data.draw(st.sampled_from(tuple(xss)))
-        for fn1 in [seqops.find_i, seqops.find_r, seqops.find_lp]:
+        for fn1 in [seqops.find_i, seqops.find_r, seqops.find_lp,
+                seqops.find_f, seqops.find_u, seqops.find_lc]:
             self.assertEqual(data1, fn1(data1, xss))
 
     @given(st.lists(st.integers(), min_size=1, max_size=20))
     def test_prop_min_max(self, xss):
         ans_min, ans_max = min(xss), max(xss)
         for (fn_min, fn_max) in [(seqops.min_i, seqops.max_i),
-                (seqops.min_r, seqops.max_r), (seqops.min_lp, seqops.max_lp)]:
+                (seqops.min_r, seqops.max_r), (seqops.min_lp, seqops.max_lp),
+                (seqops.min_f, seqops.max_f), (seqops.min_u, seqops.max_u),
+                (seqops.min_lc, seqops.max_lc)]:
             self.assertEqual(ans_min, fn_min(xss))
             self.assertEqual(ans_max, fn_max(xss))
 
     @given(st.lists(st.integers(), max_size=20))
     def test_prop_reverse(self, xss):
         ans = list(reversed(xss[:]))
-        for fn1 in [seqops.reverse_i, seqops.reverse_r, seqops.reverse_lp]:
+        for fn1 in [seqops.reverse_i, seqops.reverse_r, seqops.reverse_lp,
+                seqops.reverse_f, seqops.reverse_u, seqops.reverse_lc]:
             self.assertEqual(ans, fn1(xss))
 
     @given(st.lists(st.integers(), max_size=20))
@@ -113,7 +122,8 @@ class TestPropsSequenceops(unittest.TestCase):
     @given(st.lists(st.integers(), max_size=20))
     def test_prop_copy_of(self, xss):
         ans = xss[:]
-        for fn1 in [seqops.copy_of_i, seqops.copy_of_r, seqops.copy_of_lp]:
+        for fn1 in [seqops.copy_of_i, seqops.copy_of_r, seqops.copy_of_lp,
+                seqops.copy_of_f, seqops.copy_of_u, seqops.copy_of_lc]:
             self.assertEqual(ans, fn1(xss))
 
     @given(st.integers(min_value=0, max_value=25), st.lists(st.integers(),
@@ -124,10 +134,15 @@ class TestPropsSequenceops(unittest.TestCase):
         ans_drop = reduce(lambda a, i_e: a + [i_e[1]] if int_n <= i_e[0] else a,
             enumerate(xss), [])
         for (fn_take, fn_drop) in [(seqops.take_i, seqops.drop_i),
-                (seqops.take_lp, seqops.drop_lp)]:
+                (seqops.take_lp, seqops.drop_lp),
+                (seqops.take_f, seqops.drop_f),
+                (seqops.take_u, seqops.drop_u),
+                (seqops.take_lc, seqops.drop_lc),
+                (seqops.take_islice, seqops.drop_islice)]:
             self.assertEqual(ans_take, fn_take(int_n, xss))
             self.assertEqual(ans_drop, fn_drop(int_n, xss))
-        for fn1 in [seqops.split_at_i, seqops.split_at_lp]:
+        for fn1 in [seqops.split_at_i, seqops.split_at_lp, seqops.split_at_f,
+                seqops.split_at_u, seqops.split_at_lc, seqops.split_at_islice]:
             res = fn1(int_n, xss)
             self.assertEqual(ans_take, res[0])
             self.assertEqual(ans_drop, res[1])
@@ -138,7 +153,9 @@ class TestPropsSequenceops(unittest.TestCase):
         ans_any = reduce(lambda a, e: a or pred1(e), xss, False)
         ans_all = reduce(lambda a, e: a and pred1(e), xss, True)
         for (fn_any, fn_all) in [(seqops.any_i, seqops.all_i),
-                (seqops.any_r, seqops.all_r), (seqops.any_lp, seqops.all_lp)]:
+                (seqops.any_r, seqops.all_r), (seqops.any_lp, seqops.all_lp),
+                (seqops.any_f, seqops.all_f), (seqops.any_u, seqops.all_u),
+                (seqops.any_lc, seqops.all_lc)]:
             self.assertEqual(ans_any, fn_any(pred1, xss))
             self.assertEqual(ans_all, fn_all(pred1, xss))
 
@@ -146,14 +163,16 @@ class TestPropsSequenceops(unittest.TestCase):
     def test_prop_map(self, xss):
         def proc(el): return el + 2
         ans = list(map(proc, xss))
-        for fn1 in [seqops.map_i, seqops.map_r, seqops.map_lp]:
+        for fn1 in [seqops.map_i, seqops.map_r, seqops.map_lp, seqops.map_f,
+                seqops.map_u, seqops.map_lc]:
             self.assertEqual(ans, fn1(proc, xss))
 
     @given(st.lists(st.integers(), max_size=20))
     def test_prop_foreach(self, xss):
         def proc(el): print('{0} '.format(el))
         ans = None
-        for fn1 in [seqops.foreach_i, seqops.foreach_r, seqops.foreach_lp]:
+        for fn1 in [seqops.foreach_i, seqops.foreach_r, seqops.foreach_lp,
+                seqops.foreach_f, seqops.foreach_u, seqops.foreach_lc]:
             self.assertEqual(ans, fn1(proc, xss))
 
     @given(st.lists(st.integers(), max_size=25))
@@ -163,11 +182,15 @@ class TestPropsSequenceops(unittest.TestCase):
         ans_remove = reduce(lambda a, e: a + [e] if not pred1(e) else a, xss, [])
         for (fn_f, fn_r) in [(seqops.filter_i, seqops.remove_i),
                 (seqops.filter_r, seqops.remove_r),
-                (seqops.filter_lp, seqops.remove_lp)]:
+                (seqops.filter_lp, seqops.remove_lp),
+                (seqops.filter_f, seqops.remove_f),
+                (seqops.filter_u, seqops.remove_u),
+                (seqops.filter_lc, seqops.remove_lc)]:
             self.assertEqual(ans_filter, fn_f(pred1, xss))
             self.assertEqual(ans_remove, fn_r(pred1, xss))
         for fn1 in [seqops.partition_i, seqops.partition_r,
-                seqops.partition_lp]:
+                seqops.partition_lp, seqops.partition_f,
+                seqops.partition_u, seqops.partition_lc]:
             res = fn1(pred1, xss)
             self.assertEqual(ans_filter, res[0])
             self.assertEqual(ans_remove, res[1])
@@ -263,7 +286,8 @@ class TestPropsSequenceops(unittest.TestCase):
         ans_sorted = reduce(lambda a, i: a and yss[i] <= yss[i + 1],
             range(len(yss) - 1), True)
         for fn1 in [seqops.is_ordered_i, seqops.is_ordered_r,
-                seqops.is_ordered_lp]:
+                seqops.is_ordered_lp, seqops.is_ordered_f,
+                seqops.is_ordered_lc, seqops.is_ordered_u]:
             self.assertEqual(ans, fn1(xss))
             self.assertEqual(ans_sorted, fn1(yss))
 
@@ -277,13 +301,19 @@ class TestPropsSequenceops(unittest.TestCase):
             fn1(lst, 0, len(xss) - 1)
             self.assertEqual(ans, lst)
             self.assertEqual(ansrev, lst_rev)
+            for fn_verify in [seqops.is_ordered_i, seqops.is_ordered_r,
+                    seqops.is_ordered_lp, seqops.is_ordered_f,
+                    seqops.is_ordered_lc, seqops.is_ordered_u]:
+                self.assertTrue(fn_verify(lst_rev, reverse=True))
+                self.assertTrue(fn_verify(lst))
 
 
     @given(st.lists(st.integers(), max_size=20), st.lists(st.integers(),
         max_size=20))
     def test_prop_append(self, xss, yss):
         ans = xss[:] + yss[:]
-        for fn1 in [seqops.append_i, seqops.append_r, seqops.append_lp]:
+        for fn1 in [seqops.append_i, seqops.append_r, seqops.append_lp,
+                seqops.append_f, seqops.append_u, seqops.append_lc]:
             self.assertEqual(ans, fn1(xss, yss))
 
     @given(st.lists(st.integers(), max_size=20), st.lists(st.integers(),
@@ -295,7 +325,8 @@ class TestPropsSequenceops(unittest.TestCase):
             reversed(yss[:len_short]), (xss[:len_short], xss[len_short:] +
             yss[len_short:])))[1]
         for fn1 in [seqops.interleave_i, seqops.interleave_r,
-                seqops.interleave_lp]:
+                seqops.interleave_lp, seqops.interleave_f,
+                seqops.interleave_u, seqops.interleave_lc]:
             self.assertEqual(ans, fn1(xss, yss))
 
     @given(st.lists(st.integers(), min_size=1, max_size=20),
@@ -305,25 +336,30 @@ class TestPropsSequenceops(unittest.TestCase):
         len_short = len(xss) if len(xss) < len(yss) else len(yss)
         ans = reduce(lambda a, i: a + [proc(xss[i], yss[i])],
             range(len_short), [])
-        for fn1 in [seqops.map2_i, seqops.map2_r, seqops.map2_lp]:
+        for fn1 in [seqops.map2_i, seqops.map2_r, seqops.map2_lp,
+                seqops.map2_f, seqops.map2_u, seqops.map2_lc]:
             self.assertEqual(ans, fn1(proc, xss, yss))
 
     @given(st.lists(st.integers(), min_size=1, max_size=20),
         st.lists(st.integers(), min_size=1, max_size=20))
     def test_prop_zip(self, xss, yss):
         ans = list(zip(xss, yss))
-        for fn1 in [seqops.zip_i, seqops.zip_r, seqops.zip_lp]:
+        for fn1 in [seqops.zip_i, seqops.zip_r, seqops.zip_lp,
+                seqops.zip_f, seqops.zip_u, seqops.zip_lc]:
             self.assertEqual(ans, fn1(xss, yss))
 
     @given(st.lists(st.tuples(st.integers(), st.integers()), min_size=1,
         max_size=20))
     def test_prop_unzip(self, ziplst):
         ans = list(zip(*ziplst))
-        for fn1 in [seqops.unzip_i]:
+        for fn1 in [seqops.unzip_i, seqops.unzip_f, seqops.unzip_u,
+                seqops.unzip_lc]:
             self.assertEqual(ans, fn1(ziplst))
 
     @given(st.lists(st.lists(st.integers(), max_size=20), max_size=20))
     def test_prop_concat(self, nlst):
         ans = reduce(lambda a, e: a + e, nlst, [])
-        for fn1 in [seqops.concat_i, seqops.concat_r, seqops.concat_lp]:
+        for fn1 in [seqops.concat_i, seqops.concat_r, seqops.concat_lp,
+                seqops.concat_f, seqops.concat_u, seqops.concat_lc,
+                seqops.concat_chain]:
             self.assertEqual(ans, fn1(nlst))
