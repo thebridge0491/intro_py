@@ -3,7 +3,7 @@
 from __future__ import (absolute_import, division, print_function,
     unicode_literals)
 
-import unittest , operator
+import unittest, operator, itertools
 from functools import reduce
 from future.builtins import (ascii, filter, hex, map, oct, zip, object, str,
     range)
@@ -363,3 +363,100 @@ class TestPropsSequenceops(unittest.TestCase):
                 seqops.concat_f, seqops.concat_u, seqops.concat_lc,
                 seqops.concat_chain]:
             self.assertEqual(ans, fn1(nlst))
+    
+    
+    @given(st.lists(st.integers(), max_size=20), st.lists(st.integers(),
+        max_size=20), st.lists(st.integers(), max_size=20))
+    def test_prop_any_all_v(self, xss, yss, zss):
+        def pred1(el1): 0 == el1 % 2
+        for lst in [[xss, yss], [xss, yss, zss]]:
+            ans_any = any(map(pred1, itertools.chain(*lst)))
+            ans_all = all(map(pred1, itertools.chain(*lst)))
+            for (fn_any, fn_all) in [(seqops.any_lpv, seqops.all_lpv),
+                    (seqops.any_fv, seqops.all_fv),
+                    (seqops.any_lcv, seqops.all_lcv)]:
+                self.assertEqual(ans_any, fn_any(pred1, *lst))
+                self.assertEqual(ans_all, fn_all(pred1, *lst))
+            for (anyGen, allGen) in [(seqops.any_yv, seqops.all_yv)]:
+                #res_genAny = anyGen(pred1, *lst)
+                #res_genAll = anyGen(pred1, *lst)
+                #self.assertEqual(ans_any, [next(res_genAny) for i in
+                #    range(len(list(zip(*lst))))][-1])
+                #self.assertEqual(ans_all, [next(res_genAll) for i in
+                #    range(len(list(zip(*lst))))][-1])
+                resAny, resAll = list(anyGen(pred1, *lst)), list(allGen(pred1, *lst))
+                self.assertEqual(ans_any, (False if [] == resAny else resAny[-1]))
+                self.assertEqual(ans_all, (True if [] == resAll else resAll[-1]))
+
+    @given(st.lists(st.integers(), max_size=20), st.lists(st.integers(),
+        max_size=20), st.lists(st.integers(), max_size=20))
+    def test_prop_map_v(self, xss, yss, zss):
+        def proc2(el1, el2): return [el1 + 2, el2 + 2]
+        def proc3(el1, el2, el3): return [el1 + 2, el2 + 2, el3 + 2]
+        for proc, lst in [(proc2, [xss, yss]), (proc3, [xss, yss, zss])]:
+            ans = list(map(proc, *lst))
+            for fn1 in [seqops.map_lpv, seqops.map_yv, seqops.map_fv,
+                    seqops.map_lcv]:
+                self.assertEqual(ans, list(fn1(proc, *lst)))
+
+    @given(st.lists(st.integers(), max_size=20), st.lists(st.integers(),
+        max_size=20), st.lists(st.integers(), max_size=20))
+    def test_prop_foreach_v(self, xss, yss, zss):
+        def proc2(el1, el2): print(el1, el2)
+        def proc3(el1, el2, el3): print(el1, el2, el3)
+        for proc, lst in [(proc2, [xss, yss]), (proc3, [xss, yss, zss])]:
+            ans = list(map(proc, *lst))
+            for fn1 in [seqops.foreach_lpv, seqops.foreach_yv,
+                    seqops.foreach_fv, seqops.foreach_lcv]:
+                self.assertEqual(ans, list(fn1(proc, *lst)))
+
+    @given(st.lists(st.integers(), max_size=20), st.lists(st.integers(),
+        max_size=20), st.lists(st.integers(), max_size=20))
+    def test_prop_fold_left_v(self, xss, yss, zss):
+        def corp2(acc, el1, el2): return (acc + el1) + el2
+        def corp3(acc, el1, el2, el3): return ((acc - el1) - el2) - el3
+        for corp, lst in [(corp2, [xss, yss]), (corp3, [xss, yss, zss])]:
+            ans = reduce(lambda a, e: corp(a, *e), list(zip(*lst)), 0)
+            for fn1 in [seqops.fold_left_lpv]:
+                self.assertEqual(ans, fn1(corp, 0, *lst))
+            for fnGen in [seqops.fold_left_yv]:
+                #res_gen = fnGen(corp, 0, *lst)
+                #self.assertEqual(ans, ([0] + [next(res_gen) for i in
+                #    range(len(list(zip(*lst))))])[-1])
+                self.assertEqual(ans, ([0] + list(fnGen(corp, 0, *lst)))[-1])
+
+    @given(st.lists(st.integers(), max_size=20), st.lists(st.integers(),
+        max_size=20), st.lists(st.integers(), max_size=20))
+    def test_prop_fold_right_v(self, xss, yss, zss):
+        def proc2(acc, el1, el2): return (el1 + el2) + acc
+        def proc3(acc, el1, el2, el3): return ((el1 + el2) + el3) - acc
+        for proc, lst in [(proc2, [xss, yss]), (proc3, [xss, yss, zss])]:
+            ans = reduce(lambda a, e: proc(a, *e), list(zip(*list(map(reversed,
+                lst)))), 0)
+            for fn1 in [seqops.fold_right_lpv]:
+                self.assertEqual(ans, fn1(proc, 0, *lst))
+            for fnGen in [seqops.fold_right_yv]:
+                #res_gen = fnGen(proc, 0, *lst)
+                #self.assertEqual(ans, ([0] + [next(res_gen) for i in
+                #    range(len(list(zip(*lst))))])[-1])
+                self.assertEqual(ans, ([0] + list(fnGen(proc, 0, *lst)))[-1])
+
+    @given(st.lists(st.integers(), max_size=20), st.lists(st.integers(),
+        max_size=20), st.lists(st.integers(), max_size=20))
+    def test_prop_append_v(self, xss, yss, zss):
+        for lst in [[xss, yss], [xss, yss, zss]]:
+            ans = list(itertools.chain(*lst))
+            for fn1 in [seqops.append_lpv, seqops.append_fv, seqops.append_lcv]:
+                self.assertEqual(ans, fn1(*lst))
+            for fn1 in [seqops.append_yv]:
+                self.assertEqual(ans, list(fn1(*lst))[-1])
+
+    @given(st.lists(st.integers(), max_size=20), st.lists(st.floats(),
+        max_size=20), st.lists(st.characters(), max_size=20),
+        st.lists(st.integers(), max_size=20))
+    def test_prop_zip_v(self, xss, yss, zss, wss):
+        for lst in [[xss, yss, zss], [xss, yss, zss, wss]]:
+            ans = list(zip(*lst))
+            for fn1 in [seqops.zip_lpv, seqops.zip_yv, seqops.zip_fv,
+                    seqops.zip_lcv]:
+                self.assertEqual(ans, list(fn1(*lst)))

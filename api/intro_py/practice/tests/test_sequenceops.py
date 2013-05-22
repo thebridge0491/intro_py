@@ -3,7 +3,7 @@
 from __future__ import (absolute_import, division, print_function,
     unicode_literals)
 
-import unittest
+import unittest, itertools
 from functools import reduce
 from future.builtins import (ascii, filter, hex, map, oct, zip, range)
 
@@ -315,3 +315,95 @@ class TestSequenceops(unittest.TestCase):
                     seqops.concat_f, seqops.concat_u, seqops.concat_lc,
                     seqops.concat_chain]:
                 self.assertEqual(ans, fn1(nlst))
+
+
+    def test_any_all_v(self):
+        def pred_any(el1): return [] == el1
+        def pred_all(el1): return 0 != len(el1)
+        lst_any2, lst_any3 = [[1, 2], [5, []]], [[1, 2], [3, 4], [5, []]]
+        lst_all2, lst_all3 = [[[1]], [[3, 4]]], [[[1]], [[2]], [[3, 4]]]
+        for (xss, yss) in [(lst_any2, lst_all2), (lst_any3, lst_all3)]:
+            ans_any = any(map(pred_any, itertools.chain(*xss)))
+            ans_all = all(map(pred_all, itertools.chain(*yss)))
+            for (fn_any, fn_all) in [(seqops.any_lpv, seqops.all_lpv),
+                    (seqops.any_fv, seqops.all_fv),
+                    (seqops.any_lcv, seqops.all_lcv)]:
+                self.assertEqual(ans_any, fn_any(pred_any, *xss))
+                self.assertEqual(ans_all, fn_all(pred_all, *yss))
+            for (anyGen, allGen) in [(seqops.any_yv, seqops.all_yv)]:
+                #res_genAny = anyGen(pred_any, *xss)
+                #res_genAll = anyGen(pred_all, *yss)
+                #self.assertEqual(ans_any, [next(res_genAny) for i in
+                #    range(len(list(zip(*xss))))][-1])
+                #self.assertEqual(ans_all, [next(res_genAll) for i in
+                #    range(len(list(zip(*yss))))][-1])
+                self.assertEqual(ans_any, list(anyGen(pred_any, *xss))[-1])
+                self.assertEqual(ans_all, list(allGen(pred_all, *yss))[-1])
+
+    def test_map_v(self):
+        def func2(el1, el2): return [el1 + 2, el2 + 2]
+        def func3(el1, el2, el3): return [el1 + 2, el2 + 2, el3 + 2]
+        lst2, lst3 = [[0, 1], [2, 3]], [[0, 1], [2, 3], [4, 5]]
+        for (xss, func) in [(lst2, func2), (lst3, func3)]:
+            ans = list(map(func, *xss))
+            for fn1 in [seqops.map_lpv, seqops.map_yv, seqops.map_fv,
+                    seqops.map_lcv]:
+                self.assertEqual(ans, list(fn1(func, *xss)))
+
+    def test_foreach_v(self):
+        def func2(el1, el2): print(el1, el2)
+        def func3(el1, el2, el3): print(el1, el2, el3)
+        lst2, lst3 = [[0, 1], [2, 3]], [[0, 1], [2, 3], [4, 5]]
+        for (xss, func) in [(lst2, func2), (lst3, func3)]:
+            ans = list(map(func, *xss))
+            for fn1 in [seqops.foreach_lpv, seqops.foreach_yv, seqops.foreach_fv,
+                    seqops.foreach_lcv]:
+                self.assertEqual(ans, list(fn1(func, *xss)))
+
+    def test_fold_left_v(self):
+        def corp2(acc, el1, el2): return (acc + el1) + el2
+        def corp3(acc, el1, el2, el3): return ((acc - el1) - el2) - el3
+        lst2, lst3 = [[0, 1, 2], [2, 3]], [[0, 1, 2], [2, 3], [3, 4]]
+        for (xss, func) in [(lst2, corp2), (lst3, corp3)]:
+            ans = reduce(lambda a, e: func(a, *e), list(zip(*xss)), 0)
+            for fn1 in [seqops.fold_left_lpv]:
+                self.assertEqual(ans, fn1(func, 0, *xss))
+            for fnGen in [seqops.fold_left_yv]:
+                #res_gen = fnGen(func, 0, *xss)
+                #self.assertEqual(ans, [next(res_gen) for i in
+                #    range(len(list(zip(*xss))))][-1])
+                self.assertEqual(ans, list(fnGen(func, 0, *xss))[-1])
+
+    def test_fold_right_v(self):
+        def proc2(acc, el1, el2): return (el1 + el2) + acc
+        def proc3(acc, el1, el2, el3): return ((el1 + el2) + el3) - acc
+        lst2, lst3 = [[0, 1, 2], [2, 3]], [[0, 1, 2], [2, 3], [3, 4]]
+        for (xss, func) in [(lst2, proc2), (lst3, proc3)]:
+            ans = reduce(lambda a, e: func(a, *e),
+                list(zip(*list(map(reversed, xss)))), 0)
+            for fn1 in [seqops.fold_right_lpv]:
+                self.assertEqual(ans, fn1(func, 0, *xss))
+            for fnGen in [seqops.fold_right_yv]:
+                #res_gen = fnGen(func, 0, *xss)
+                #self.assertEqual(ans, [next(res_gen) for i in
+                #    range(len(list(zip(*xss))))][-1])
+                self.assertEqual(ans, list(fnGen(func, 0, *xss))[-1])
+
+    def test_append_v(self):
+        lst1 = [[1], [2, 3], [4]]
+        lst2 = [[1], [2, 3], [4], [5, 6]]
+        for xss in [lst1, lst2]:
+            ans = list(itertools.chain(*xss))
+            for fn1 in [seqops.append_lpv, seqops.append_fv, seqops.append_lcv]:
+                self.assertEqual(ans, fn1(*xss))
+            for fn1 in [seqops.append_yv]:
+                self.assertEqual(ans, list(fn1(*xss))[-1])
+
+    def test_zip_v(self):
+        lst3 = [[0, 1, 2], [20, 30], ["a", "b"]]
+        lst4 = [[0, 1, 2], [20, 30], ["a", "b"], ["Z", "Y"]]
+        for xss in [lst3, lst4]:
+            ans = list(zip(*xss))
+            for fn1 in [seqops.zip_lpv, seqops.zip_yv, seqops.zip_fv,
+                    seqops.zip_lcv]:
+                self.assertEqual(ans, list(fn1(*xss)))

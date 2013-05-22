@@ -55,6 +55,11 @@ class TestPropsClassic(unittest.TestCase):
         for fn1 in [classic.square_i, classic.square_r, classic.square_lp,
                 classic.square_f, classic.square_u, classic.square_lc]:
             self.assertEqual(ans, fn1(int_n))
+        for res_gen in [classic.squares_mut_y(), classic.squares_y(),
+                classic.squares_map2y(), classic.squares_uy(),
+                classic.squares_ge()]:
+            self.assertEqual(ans, 
+                [next(res_gen) for i in range(int_n + 1)][-1])
 
     @given(st.integers(min_value=-50, max_value=150), st.integers(min_value=-50,
         max_value=150))
@@ -63,6 +68,11 @@ class TestPropsClassic(unittest.TestCase):
         for fn1 in [classic.sum_to_i, classic.sum_to_r, classic.sum_to_lp,
                 classic.sum_to_f, classic.sum_to_u, classic.sum_to_lc]:
             self.assertEqual(ans, fn1(hi, lo))
+        for res_gen in [classic.sums_mut_y(lo), classic.sums_y(lo),
+                classic.sums_map2y(lo), classic.sums_uy(lo),
+                classic.sums_ge(lo)]:
+            self.assertEqual(ans,
+                ([0] + [next(res_gen) for i in range(lo, hi + 1)])[-1])
 
     @given(st.integers(min_value=0, max_value=18))
     def test_prop_fact(self, num):
@@ -70,6 +80,11 @@ class TestPropsClassic(unittest.TestCase):
         for fn1 in [classic.fact_i, classic.fact_r, classic.fact_lp,
                 classic.fact_f, classic.fact_u, classic.fact_lc]:
             self.assertEqual(ans, fn1(num))
+        for res_gen in [classic.facts_mut_y(), classic.facts_y(),
+                classic.facts_map2y(), classic.facts_uy(),
+                classic.facts_ge()]:
+            self.assertEqual(ans, [next(res_gen) for i in range(num + 1)][-1])
+            self.assertEqual((ans * (num + 1)), next(res_gen))
 
     @given(st.integers(min_value=0, max_value=20))
     def test_prop_fib(self, num):
@@ -78,6 +93,9 @@ class TestPropsClassic(unittest.TestCase):
         for fn1 in [classic.fib_i, classic.fib_r, classic.fib_lp,
                 classic.fib_f, classic.fib_u, classic.fib_lc]:
             self.assertEqual(ans, fn1(num))
+        for res_gen in [classic.fibs_mut_y(), classic.fibs_y(),
+                classic.fibs_map2y(), classic.fibs_uy(), classic.fibs_ge()]:
+            self.assertEqual(ans, [next(res_gen) for i in range(num + 1)][-1])
 
     @given(st.integers(min_value=1, max_value=20), st.integers(min_value=2,
         max_value=10))
@@ -91,6 +109,12 @@ class TestPropsClassic(unittest.TestCase):
             # self.assertEqual(ans, fn1(base, num))
             self.assertTrue(util.in_epsilon(ans, fn1(base, num),
                 0.001 * ans))
+        for res_gen in [classic.expts_y(base), classic.expts_mut_y(base),
+                classic.expts_map2y(base), classic.expts_uy(base),
+                classic.expts_ge(base)]:
+            res = [next(res_gen) for i in range(int(num + 1))][-1]
+            #self.assertEqual(ans, res)
+            self.assertTrue(util.in_epsilon(0.001 * ans, ans, res))
 
     @given(st.integers(min_value=0, max_value=15))
     def test_prop_pascaltri(self, rows):
@@ -100,6 +124,15 @@ class TestPropsClassic(unittest.TestCase):
                 classic.pascaltri_lp, classic.pascaltri_f, classic.pascaltri_u,
                 classic.pascaltri_lc]:
             res = fn1(rows)
+            self.assertEqual(ans, res)
+            self.assertEqual(len(res), rows + 1)
+            for idx, row in enumerate(res):
+                self.assertEqual(len(row), idx + 1)
+                self.assertEqual(reduce(operator.add, row, 0), int(2 ** idx))
+        for res_gen in [classic.pascalrows_y(), classic.pascalrows_mut_y(),
+                classic.pascalrows_map2y(), classic.pascalrows_uy(),
+                classic.pascalrows_ge()]:
+            res = [next(res_gen) for i in range(rows + 1)]
             self.assertEqual(ans, res)
             self.assertEqual(len(res), rows + 1)
             for idx, row in enumerate(res):

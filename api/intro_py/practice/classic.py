@@ -20,6 +20,17 @@ from .classic_hiorder import (square_f, sum_to_f, fact_f, fib_f, expt_f,
     square_lc, sum_to_lc, fact_lc, fib_lc, expt_lc, pascaltri_lc, gcd_lc,
     lcm_lc, base_expand_lc, base_to10_lc, range_step_lc, range_lc
 )
+from .classic_streams import (squares_mut_y, expts_mut_y, sums_mut_y,
+    facts_mut_y, fibs_mut_y, pascalrows_mut_y,
+    squares_y, expts_y, sums_y, facts_y, fibs_y, pascalrows_y,
+    
+    squares_map2y, expts_map2y, sums_map2y, facts_map2y, fibs_map2y,
+    pascalrows_map2y,
+    
+    squares_uy, expts_uy, sums_uy, facts_uy, fibs_uy, pascalrows_uy,
+
+    squares_ge, expts_ge, sums_ge, facts_ge, fibs_ge, pascalrows_ge
+    )
 
 __all__ = ['square_i', 'square_r', 'square_lp', 'sum_to_i', 'sum_to_r',
     'sum_to_lp', 'fact_i', 'fact_r', 'fact_lp', 'fib_i', 'fib_r', 'fib_lp',
@@ -43,7 +54,20 @@ __all__ = ['square_i', 'square_r', 'square_lp', 'sum_to_i', 'sum_to_r',
     
     'square_lc', 'sum_to_lc', 'fact_lc', 'fib_lc', 'expt_lc', 'pascaltri_lc',
     'gcd_lc', 'lcm_lc', 'base_expand_lc', 'base_to10_lc', 'range_step_lc',
-    'range_lc'
+    'range_lc',
+    
+    'squares_mut_y', 'expts_mut_y', 'sums_mut_y', 'facts_mut_y', 'fibs_mut_y',
+    'pascalrows_mut_y',
+    'squares_y', 'expts_y', 'sums_y', 'facts_y', 'fibs_y', 'pascalrows_y',
+    
+    'squares_map2y', 'expts_map2y', 'sums_map2y', 'facts_map2y', 'fibs_map2y',
+    'pascalrows_map2y',
+    
+    'squares_uy', 'expts_uy', 'sums_uy', 'facts_uy', 'fibs_uy',
+    'pascalrows_uy',
+    
+    'squares_ge', 'expts_ge', 'sums_ge', 'facts_ge', 'fibs_ge',
+    'pascalrows_ge'
     ]
 
 

@@ -33,6 +33,16 @@ from .sequenceops_hiorder import (tabulate_f, length_f, nth_f, index_f,
     tabulate_imap, nth_islice, take_islice, drop_islice, split_at_islice,
     concat_chain
 )
+from .sequenceops_variadic import (any_lpv, all_lpv, map_lpv, foreach_lpv,
+    fold_left_lpv, fold_right_lpv, append_lpv, zip_lpv, 
+    
+    any_yv, all_yv, map_yv, foreach_yv, fold_left_yv, fold_right_yv,
+    append_yv, zip_yv,
+    
+    any_fv, all_fv, map_fv, foreach_fv, append_fv, zip_fv,
+    
+    any_lcv, all_lcv, map_lcv, foreach_lcv, append_lcv, zip_lcv
+)
 
 __all__ = ['tabulate_i', 'tabulate_r', 'tabulate_lp', 'length_i', 'length_r',
     'length_lp', 'nth_i', 'nth_r', 'nth_lp', 'index_i', 'index_r', 'index_lp',
@@ -79,7 +89,15 @@ __all__ = ['tabulate_i', 'tabulate_r', 'tabulate_lp', 'length_i', 'length_r',
     
     
     'tabulate_imap', 'nth_islice', 'take_islice', 'drop_islice',
-    'split_at_islice', 'concat_chain'
+    'split_at_islice', 'concat_chain',
+    
+    
+    'any_lpv', 'all_lpv', 'map_yv', 'foreach_yv', 'fold_left_lpv',
+    'fold_right_lpv', 'append_lpv', 'zip_yv',
+    'map_lpv', 'foreach_lpv', 'fold_left_yv', 'fold_right_yv', 'zip_lpv',
+    'any_yv', 'all_yv', 'append_yv', 'any_fv', 'all_fv', 'map_fv',
+    'foreach_fv', 'zip_fv', 'append_fv', 'append_lcv', 'map_lcv',
+    'foreach_lcv', 'zip_fv', 'any_lcv', 'all_lcv'
     ]
 
 
