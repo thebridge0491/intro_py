@@ -1,4 +1,8 @@
-future
 wheel
-#cffi>=0.6
+future
+pytest
+pytest-timeout
+nose2
+hypothesis
+cffi
 -r requirements-internal.txt

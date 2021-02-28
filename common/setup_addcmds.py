@@ -3,7 +3,7 @@ from __future__ import absolute_import, print_function
 
 from setuptools import Command
 import os, subprocess, sys, glob, pkg_resources
-from future.builtins import dict
+from builtins import dict
 
 __all__ = ['cmdclass']
 

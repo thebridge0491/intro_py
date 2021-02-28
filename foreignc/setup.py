@@ -5,7 +5,7 @@ import os, sys, pkgutil, json, glob
 from distutils.command.clean import clean as CleanCommand
 from setuptools import setup, find_packages, Command
 #from setuptools import Extension # for Swig extension
-from future.builtins import open, dict
+from builtins import open, dict
 
 PROJECT = 'intro_py.foreignc'
 HERE = os.path.abspath(os.path.dirname(__file__))

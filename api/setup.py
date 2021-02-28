@@ -4,7 +4,7 @@ from __future__ import absolute_import, print_function
 import os, sys, pkgutil, json, glob
 from distutils.command.clean import clean as CleanCommand
 from setuptools import setup, find_packages, Command
-from future.builtins import open, dict
+from builtins import open, dict
 
 PROJECT = 'intro_py.practice'
 HERE = os.path.abspath(os.path.dirname(__file__))

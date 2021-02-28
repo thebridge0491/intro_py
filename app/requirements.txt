@@ -1,3 +1,11 @@
-future
 wheel
+future
+pytest
+pytest-timeout
+nose2
+hypothesis
+click
+PyYAML
+toml
+configparser
 -r requirements-internal.txt

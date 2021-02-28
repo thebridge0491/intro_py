@@ -1,3 +1,7 @@
-future
 wheel
+future
+pytest
+pytest-timeout
+nose2
+hypothesis
 -r requirements-internal.txt

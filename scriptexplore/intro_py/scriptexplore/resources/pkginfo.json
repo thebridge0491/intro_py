@@ -12,15 +12,17 @@
     "download_url": "https://bitbucket.org/thebridge0491/intro_py/archive/master.zip",
     "keywords": ["demo", "development", "script exploration"],
     "platforms": ["any"],
-    "setup_requires": ["wheel", "future"
+    "setup_requires": ["coverage", "pylint", "pep8", "pycodestyle", "pydocstyle",
+        "Sphinx"
     ],
-    "tests_require": [
+    "tests_require": ["pytest", "pytest-timeout", "nose2", "hypothesis"
     ],
-    "install_requires": ["future"
+    "install_requires": ["wheel", "future"
     ],
     "extras_require": {
         ":python_version=='2.6'": ["argparse"],
-        "test": [],
+        "setup": ["coverage", "pylint", "pep8", "pycodestyle", "pydocstyle", "Sphinx"],
+        "test": ["pytest", "pytest-timeout", "nose2", "hypothesis"],
         "dev": ["check-manifest>=0.12.0"]
     },
     "zip_safe": true,
