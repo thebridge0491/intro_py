@@ -3,7 +3,7 @@ Intro_py.Util
 .. .rst to .html: rst2html5 foo.rst > foo.html
 ..                pandoc -s -f rst -t html5 -o foo.html foo.rst
 
-Utilites sub-package for Python Intro examples project.
+Utilities sub-package for Python Intro examples project.
 
 Installation
 ------------
@@ -19,9 +19,11 @@ version control repository clone:
         
         git clone https://bitbucket.org/thebridge0491/intro_py.git
 
-cd <path> ; pip install --user -e .
+pip install --user -r <path>/requirements.txt
 
-python setup.py test
+cd <path> ; pip install --user . --no-deps [--no-build-isolation]
+
+python -m unittest discover
 
 Usage
 -----

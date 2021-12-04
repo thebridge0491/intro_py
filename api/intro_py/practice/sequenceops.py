@@ -7,7 +7,7 @@ from __future__ import (absolute_import, division, print_function,
     unicode_literals)
 
 import sys, logging, inspect, operator
-from future.builtins import (ascii, filter, hex, map, oct, zip, range)
+#from builtins import (ascii, filter, hex, map, oct, zip, range)
 
 from .sequenceops_hiorder import (tabulate_f, length_f, nth_f, index_f,
     find_f, min_f, max_f, reverse_f, copy_of_f, take_f, drop_f, split_at_f,

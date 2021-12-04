@@ -7,7 +7,7 @@ from __future__ import (absolute_import, division, print_function,
     unicode_literals)
 
 import logging, inspect
-from future.builtins import (ascii, filter, hex, map, oct, zip, object)
+#from builtins import (ascii, filter, hex, map, oct, zip, object)
 
 __all__ = ['Person']
 

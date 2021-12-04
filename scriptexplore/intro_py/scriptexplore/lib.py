@@ -7,7 +7,7 @@ from __future__ import (absolute_import, division, print_function,
     unicode_literals)
 
 import sys, os, logging
-from future.builtins import (ascii, filter, hex, map, oct, zip, str)
+#from builtins import (ascii, filter, hex, map, oct, zip, str)
 
 __all__ = ['read_resource', 'config_logging', 'in_epsilon']
 

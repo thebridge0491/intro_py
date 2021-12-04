@@ -1,0 +1,39 @@
+[build-system]
+requires = ["setuptools >= 48.0.0", "wheel >= 0.34.2"]
+build-backend = 'setuptools.build_meta'
+
+
+[tool.pytest.ini_options]
+norecursedirs = [".hg", ".git", ".tox", ".env", "dist", "build", "_build", "docs"]
+collect_ignore = ['setup.py', 'tasks.py']
+python_files = ["test_*.py", "*_test.py", "tests.py"]
+addopts = "-rxEfsw --strict --doctest-modules --doctest-glob=\\*.rst --tb=short"
+#testspaths = "tests"
+
+
+[tool.coverage.run]
+#data_file = "build/.coverage"
+source = ["."]
+omit = ["setup.py", "tasks.py"]
+branch = true
+parallel = true
+
+[tool.coverage.report]
+show_missing = true
+precision = 2
+#omit = "*migrations*"
+
+[tool.coverage.html]
+#directory = "build/cov"
+title = "Coverage report"
+
+[tool.coverage.xml]
+#output = "build/coverage.xml"
+
+
+[tool.pylint."MESSAGES CONTROL"]
+disable = "wildcard-import,unused-import,unused-wildcard-import,multiple-imports,trailing-whitespace,bad-whitespace,redefined-builtin,wrong-spelling-in-comment,pointless-statement,unused-argument,missing-docstring"
+
+[tool.pylint."REPORTS"]
+reports = "yes"
+msg-template = "{C}: {line}, {column}: {msg} {msg_id}({symbol})"

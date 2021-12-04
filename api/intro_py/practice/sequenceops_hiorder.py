@@ -8,7 +8,7 @@ from __future__ import (absolute_import, division, print_function,
 
 import logging, inspect, operator, itertools
 from functools import reduce
-from future.builtins import (ascii, filter, hex, map, oct, zip, range)
+#from builtins import (ascii, filter, hex, map, oct, zip, range)
 
 from intro_py import util
 

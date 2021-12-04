@@ -5,7 +5,7 @@ from __future__ import (absolute_import, division, print_function,
 
 import unittest, operator
 from functools import reduce
-from future.builtins import (ascii, filter, hex, map, oct, zip, range)
+#from builtins import (ascii, filter, hex, map, oct, zip, range)
 
 from intro_py import util
 from intro_py.practice import classic

@@ -1,0 +1,111 @@
+.POSIX:
+.SUFFIXES:
+PREFIX = /usr/local
+
+DEBUG = 0
+
+.DEFAULT_GOAL := help
+
+# [python[2|3]|jython]
+PYTHON = python
+
+pkg = util
+parent = intro_py
+proj = $(parent).$(pkg)
+namespace_path = $(shell echo $(proj) | sed 'y|.|/|')
+#version = $(shell sed -n 's|^Version: \(.*\)|\1|p' $(proj).*-info/* | uniq)
+version = $(shell $(PYTHON) setup.py --version)
+ver_major = $(shell echo $(version) | cut -d'.' -f1)
+
+FMTS ?= gztar,zip
+
+define PRINT_HELP_PYSCRIPT
+import re, sys
+
+for line in sys.stdin:
+	match = re.match(r'^([^:]*):.*?## (.*)$$', line)
+	if match:
+		target, help = match.groups()
+		print("%-20s ## %s" % (target, help))
+endef
+export PRINT_HELP_PYSCRIPT
+
+.PHONY: help build clean test develop install dist doc
+help: ## help info: make [DEBUG=1] [PYTHON=python] [target]
+	-@for fileX in $(MAKEFILE_LIST) ; do \
+		$(PYTHON) -c "$$PRINT_HELP_PYSCRIPT" < $$fileX ; done
+build: ## build package [DEBUG=1] [OPTS=""]
+	$(PYTHON) -m build --no-isolation $(OPTS)
+clean: ## clean build artifacts [OPTS=""]
+	$(PYTHON) setup.py $@ $(OPTS)
+test: ## run tests [DEBUG=1] [TOPTS=""]
+	$(PYTHON) -m unittest discover $(TOPTS)
+develop: ## to user's Python site-packages, pip install --user [OPTS=""] -e .
+#	$(PYTHON) setup.py $@ $(OPTS) ; $(PYTHON) -m pip show $(proj)
+	$(PYTHON) -m pip install --no-deps --no-build-isolation --user $(OPTS) -e .
+	$(PYTHON) -m pip show $(proj)
+install: ## to Python's site-packages, pip install --user [OPTS=""] .
+	$(PYTHON) -m pip install --no-deps --no-build-isolation --user $(OPTS) .
+	$(PYTHON) -m pip show $(proj)
+
+dist: ## create source and wheel distributions
+	$(PYTHON) -m build --no-isolation
+	ls -l dist
+doc: ## generate documentation [OPTS=""] (Sphinx HTML w/ API docs)
+#	$(PYTHON) -m sphinx.cmd.quickstart -p 'Intro_py.Util' -a '' -v 0.1.0
+#		--no-batchfile --no-makefile --ext-autodoc --ext-viewcode -q docs
+	$(PYTHON) -m sphinx.ext.apidoc -f -o docs/ $(parent)
+	$(PYTHON) -m sphinx.cmd.build -b html $(OPTS) docs docs/_build
+
+
+ZIPOPTS := $(ZIPOPTS) -9 -q --exclude @${PWD}/exclude.lst
+
+define BROWSER_PYSCRIPT
+import os, webbrowser, sys
+
+try:
+	from urllib import pathname2url
+except:
+	from urllib.request import pathname2url
+
+webbrowser.open("file://" + pathname2url(os.path.abspath(sys.argv[1])))
+endef
+export BROWSER_PYSCRIPT
+
+#BROWSER := $(PYTHON) -c "$$BROWSER_PYSCRIPT"
+BROWSER := w3m -M
+
+.PHONY: pylint flake8 pycodestyle pydocstyle pychecker report html xml bdist_jar copyreqs zipreqs twine tox servedocs
+pylint: ## lint style [OPTS=""] with pylint
+	$(PYTHON) -m pylint $(OPTS) $(proj)
+flake8 pycodestyle pydocstyle: ## lint style [OPTS=""] with [flake8 | pycodestyle | pydocstyle]
+	$(PYTHON) -m $@ $(OPTS) `find $(parent) -name '*.py'`
+pychecker: ## lint style [OPTS=""] with pychecker
+	$(PYTHON) -m pychecker.checker $(OPTS) `find $(parent) -name '*.py' -a ! -name '__main__.py'`
+report html xml: ## report code coverage [OPTS=""]
+	$(PYTHON) -m coverage combine ; $(PYTHON) -m coverage $@ $(OPTS)
+	if [ "$@" = "html"] && [ -e "htmlcov/index.html" ] ; then \
+		$(BROWSER) htmlcov/index.html ; fi
+
+bdist_jar: ## create jar distribution
+	-echo Class-Path: . > build/manifest.mf
+	-jar -cfme dist/$(proj)-$(version).jar build/manifest.mf \
+		org.python.util.JarRunner $(proj).* ;
+	-zip $(ZIPOPTS) -r dist/$(proj)-$(version).jar .
+build/pylib copyreqs: ## copy requirements to build/pylib
+	-$(PYTHON) -m pip install -U --no-deps --no-build-isolation -t build/pylib -r requirements-internal.txt
+	-$(PYTHON) -m pip install -U -t build/pylib/site-packages -r requirements.txt
+	-find build/pylib -type d -name '*-info' -exec rm -fr {} \;
+zipreqs: build/pylib ## zip requirements to [wheel|jar] distribution
+	mkdir -p build/pylib
+	cp $(namespace_path)/tests/__main__.py build/pylib/
+	-for archive in `pwd`/dist/$(proj)*.{whl,jar} ; do \
+		(cd build/pylib ; zip $(ZIPOPTS) -r $$archive *) ; \
+	done
+
+twine: dist ## register|upload a release
+	$(PYTHON) -m twine upload dist/*
+tox: ## for every Python version, run tests [TOPTS="-h"]
+	$(PYTHON) -m tox $(TOPTS)
+servedocs: docs ## compile the docs watching for changes
+	$(PYTHON) -m watchdog.watchmedo shell-command -p '*.rst' -c '$(PYTHON) -m sphinx.cmd.build -b html docs docs/_build' -R -D .

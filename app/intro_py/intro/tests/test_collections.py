@@ -3,7 +3,7 @@ from __future__ import (absolute_import, division, print_function,
     unicode_literals)
 
 import unittest
-from future.builtins import (ascii, filter, hex, map, oct, zip, dict, range)
+#from builtins import (ascii, filter, hex, map, oct, zip, dict, range)
 
 LST, REVLST = list(range(0, 5)), list(range(4, -1, -1))
 

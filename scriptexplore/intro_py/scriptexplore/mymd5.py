@@ -4,7 +4,7 @@
 from __future__ import (division, print_function, unicode_literals)
 
 import warnings, sys, os, inspect, fileinput, re
-from future.builtins import *
+#from builtins import *
 
 __all__ = ['main']
 

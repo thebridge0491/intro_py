@@ -7,7 +7,7 @@ from __future__ import (absolute_import, division, print_function,
     unicode_literals)
 
 import sys, logging, inspect, operator
-from future.builtins import (ascii, filter, hex, map, oct, zip, range)
+#from builtins import (ascii, filter, hex, map, oct, zip, range)
 
 from .classic_puzzles import hanoi, nqueens, hanoi_moves, nqueens_grid
 from .classic_hiorder import (square_f, sum_to_f, fact_f, fib_f, expt_f,

@@ -19,9 +19,11 @@ version control repository clone:
         
         git clone https://bitbucket.org/thebridge0491/intro_py.git
 
-cd <path> ; pip install --user -e .
+pip install --user -r <path>/requirements.txt
 
-python setup.py test
+cd <path> ; pip install --user . --no-deps [--no-build-isolation]
+
+python -m unittest discover
 
 Usage
 -----

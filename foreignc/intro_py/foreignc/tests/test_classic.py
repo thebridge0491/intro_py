@@ -4,7 +4,7 @@ from __future__ import (absolute_import, division, print_function,
     unicode_literals)
 
 import unittest
-from future.builtins import (ascii, filter, hex, map, oct, zip, range)
+#from builtins import (ascii, filter, hex, map, oct, zip, range)
 
 from intro_py import util
 from intro_py.foreignc import classic

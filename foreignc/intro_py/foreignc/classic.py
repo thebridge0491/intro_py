@@ -8,7 +8,7 @@ from __future__ import (absolute_import, division, print_function,
 
 import sys, logging, inspect
 from ctypes import (CDLL, cdll, c_uint, c_ulong, c_float)
-from future.builtins import (ascii, filter, hex, map, oct, zip)
+#from builtins import (ascii, filter, hex, map, oct, zip)
 
 __all__ = ['fact_i', 'fact_lp', 'expt_i', 'expt_lp']
 

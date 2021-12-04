@@ -21,7 +21,7 @@ version control repository clone:
 
 Author/Copyright
 ----------------
-Author:  <-codelab@yahoo.com>
+Author: thebridge0491 <thebridge0491-codelab@yahoo.com>
     
 see sub-package's Author/Copyright
 

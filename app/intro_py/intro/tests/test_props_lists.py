@@ -4,7 +4,7 @@ from __future__ import (absolute_import, division, print_function,
 
 import unittest
 from functools import reduce
-from future.builtins import (ascii, filter, hex, map, oct, zip)
+#from builtins import (ascii, filter, hex, map, oct, zip)
 
 try:
     from hypothesis import (given, note, settings, Verbosity, 

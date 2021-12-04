@@ -7,7 +7,7 @@ from __future__ import (absolute_import, division, print_function,
     unicode_literals)
 
 import sys, os, logging
-from future.builtins import (ascii, filter, hex, map, oct, zip, str)
+#from builtins import (ascii, filter, hex, map, oct, zip, str)
 
 __all__ = ['read_resource', 'config_logging', 'ini_to_dict', 'in_epsilon', 
     'cartesian_prod', 'bound_values', 'robust_values', 'robust_failures',
@@ -17,19 +17,19 @@ __all__ = ['read_resource', 'config_logging', 'ini_to_dict', 'in_epsilon',
 MODULE_LOGGER = logging.getLogger(__name__)
 
 def read_resource(filepath, pkg_or_mod=__name__, rsrc_path=None):
-	import pkgutil #, pkg_resources
-	try:
-		if rsrc_path is None:
-			#output = pkg_resources.resource_string(pkg_or_mod, 'resources/' + filepath)
-			output = pkgutil.get_data(pkg_or_mod, 'resources/' + filepath
-				).decode(encoding='utf-8')
-		else:
-			with open(os.path.join(rsrc_path, filepath)) as fIn:
-				output = fIn.read()
-	except IOError as exc:
-		print(repr(exc), filepath)
-		output = None
-	return output
+    import pkgutil #, pkg_resources
+    try:
+        if rsrc_path is None:
+            #output = pkg_resources.resource_string(pkg_or_mod, 'resources/' + filepath)
+            output = pkgutil.get_data(pkg_or_mod, 'resources/' + filepath
+                ).decode(encoding='utf-8')
+        else:
+            with open(os.path.join(rsrc_path, filepath)) as fIn:
+                output = fIn.read()
+    except IOError as exc:
+        print(repr(exc), filepath)
+        output = None
+    return output
 
 def config_logging(log_lvl=None, log_opt=None, log_dict=None,
         mod_logger=logging.root):

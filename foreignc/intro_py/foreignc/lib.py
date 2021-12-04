@@ -7,7 +7,7 @@ from __future__ import (absolute_import, division, print_function,
     unicode_literals)
 
 import sys, logging
-from future.builtins import (ascii, filter, hex, map, oct, zip, str)
+#from builtins import (ascii, filter, hex, map, oct, zip, str)
 
 from intro_py.foreignc import classic
 
