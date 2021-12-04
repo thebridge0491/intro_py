@@ -7,9 +7,30 @@ from __future__ import (absolute_import, division, print_function,
     unicode_literals)
 
 import sys, logging, inspect, operator
-from future.builtins import (ascii, filter, hex, map, oct, zip, str)
+from future.builtins import (ascii, filter, hex, map, oct, zip, range)
 
-from .classic_puzzles import (hanoi, nqueens, hanoi_moves, nqueens_grid)
+from .classic_puzzles import hanoi, nqueens, hanoi_moves, nqueens_grid
+from .classic_hiorder import (square_f, sum_to_f, fact_f, fib_f, expt_f,
+    pascaltri_f, gcd_f, lcm_f, base_expand_f, base_to10_f, range_step_f,
+    range_f,
+    
+    square_u, sum_to_u, fact_u, fib_u, expt_u, pascaltri_u, gcd_u, lcm_u,
+    base_expand_u, base_to10_u, range_step_u, range_u,
+    
+    square_lc, sum_to_lc, fact_lc, fib_lc, expt_lc, pascaltri_lc, gcd_lc,
+    lcm_lc, base_expand_lc, base_to10_lc, range_step_lc, range_lc
+)
+from .classic_streams import (squares_mut_y, expts_mut_y, sums_mut_y,
+    facts_mut_y, fibs_mut_y, pascalrows_mut_y,
+    squares_y, expts_y, sums_y, facts_y, fibs_y, pascalrows_y,
+    
+    squares_map2y, expts_map2y, sums_map2y, facts_map2y, fibs_map2y,
+    pascalrows_map2y,
+    
+    squares_uy, expts_uy, sums_uy, facts_uy, fibs_uy, pascalrows_uy,
+
+    squares_ge, expts_ge, sums_ge, facts_ge, fibs_ge, pascalrows_ge
+    )
 
 __all__ = ['square_i', 'square_r', 'square_lp', 'sum_to_i', 'sum_to_r',
     'sum_to_lp', 'fact_i', 'fact_r', 'fact_lp', 'fib_i', 'fib_r', 'fib_lp',
@@ -21,7 +42,33 @@ __all__ = ['square_i', 'square_r', 'square_lp', 'sum_to_i', 'sum_to_r',
     'range_step_i', 'range_step_r', 'range_step_lp', 'range_i',
     'range_r', 'range_lp',
 
-    'hanoi', 'hanoi_moves', 'nqueens', 'nqueens_grid']
+    'hanoi', 'hanoi_moves', 'nqueens', 'nqueens_grid',
+
+    'square_f', 'sum_to_f', 'fact_f', 'fib_f', 'expt_f', 'pascaltri_f',
+    'gcd_f', 'lcm_f', 'base_expand_f', 'base_to10_f', 'range_step_f',
+    'range_f'
+
+    'square_u', 'sum_to_u', 'fact_u', 'fib_u', 'expt_u', 'pascaltri_u',
+    'gcd_u', 'lcm_u', 'base_expand_u', 'base_to10_u', 'range_step_u',
+    'range_u'
+    
+    'square_lc', 'sum_to_lc', 'fact_lc', 'fib_lc', 'expt_lc', 'pascaltri_lc',
+    'gcd_lc', 'lcm_lc', 'base_expand_lc', 'base_to10_lc', 'range_step_lc',
+    'range_lc',
+    
+    'squares_mut_y', 'expts_mut_y', 'sums_mut_y', 'facts_mut_y', 'fibs_mut_y',
+    'pascalrows_mut_y',
+    'squares_y', 'expts_y', 'sums_y', 'facts_y', 'fibs_y', 'pascalrows_y',
+    
+    'squares_map2y', 'expts_map2y', 'sums_map2y', 'facts_map2y', 'fibs_map2y',
+    'pascalrows_map2y',
+    
+    'squares_uy', 'expts_uy', 'sums_uy', 'facts_uy', 'fibs_uy',
+    'pascalrows_uy',
+    
+    'squares_ge', 'expts_ge', 'sums_ge', 'facts_ge', 'fibs_ge',
+    'pascalrows_ge'
+    ]
 
 
 MODULE_LOGGER = logging.getLogger(__name__)

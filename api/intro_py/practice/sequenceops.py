@@ -9,6 +9,41 @@ from __future__ import (absolute_import, division, print_function,
 import sys, logging, inspect, operator
 from future.builtins import (ascii, filter, hex, map, oct, zip, range)
 
+from .sequenceops_hiorder import (tabulate_f, length_f, nth_f, index_f,
+    find_f, min_f, max_f, reverse_f, copy_of_f, take_f, drop_f, split_at_f,
+    any_f, all_f, map_f, foreach_f, filter_f, remove_f, partition_f,
+    is_ordered_f,
+    
+    append_f, interleave_f, map2_f, zip_f, unzip_f, concat_f, flatten_f,
+    
+    
+    tabulate_u, length_u, nth_u, index_u, find_u, min_u, max_u, reverse_u, copy_of_u, split_at_u, take_u, drop_u, any_u, all_u, map_u,
+    foreach_u, partition_u, filter_u, remove_u, is_ordered_u,
+    
+    append_u, interleave_u, map2_u, zip_u, unzip_u, concat_u,
+    
+    
+    tabulate_lc, length_lc, nth_lc, index_lc, find_lc, min_lc, max_lc,
+    reverse_lc, copy_of_lc, take_lc, drop_lc, split_at_lc, any_lc, all_lc,
+    map_lc, foreach_lc, filter_lc, remove_lc, partition_lc, is_ordered_lc,
+    
+    append_lc, interleave_lc, map2_lc, zip_lc, unzip_lc, concat_lc,
+    
+    
+    tabulate_imap, nth_islice, take_islice, drop_islice, split_at_islice,
+    concat_chain
+)
+from .sequenceops_variadic import (any_lpv, all_lpv, map_lpv, foreach_lpv,
+    fold_left_lpv, fold_right_lpv, append_lpv, zip_lpv, 
+    
+    any_yv, all_yv, map_yv, foreach_yv, fold_left_yv, fold_right_yv,
+    append_yv, zip_yv,
+    
+    any_fv, all_fv, map_fv, foreach_fv, append_fv, zip_fv,
+    
+    any_lcv, all_lcv, map_lcv, foreach_lcv, append_lcv, zip_lcv
+)
+
 __all__ = ['tabulate_i', 'tabulate_r', 'tabulate_lp', 'length_i', 'length_r',
     'length_lp', 'nth_i', 'nth_r', 'nth_lp', 'index_i', 'index_r', 'index_lp',
     'find_i', 'find_r', 'find_lp', 'min_i', 'min_r', 'min_lp', 'max_i',
@@ -25,7 +60,45 @@ __all__ = ['tabulate_i', 'tabulate_r', 'tabulate_lp', 'length_i', 'length_r',
 
     'append_i', 'append_r', 'append_lp', 'interleave_i', 'interleave_r',
     'interleave_lp', 'map2_i', 'map2_r', 'map2_lp', 'zip_i', 'zip_r',
-    'zip_lp', 'unzip_i', 'concat_i', 'concat_r', 'concat_lp', 'flatten_r']
+    'zip_lp', 'unzip_i', 'concat_i', 'concat_r', 'concat_lp', 'flatten_r',
+    
+    
+    'tabulate_f', 'length_f', 'nth_f', 'index_f', 'find_f', 'min_f', 'max_f',
+    'reverse_f', 'copy_of_f', 'take_f', 'drop_f', 'split_at_f', 'any_f',
+    'all_f', 'map_f', 'foreach_f', 'filter_f', 'remove_f', 'partition_f',
+    'is_ordered_f',
+    
+    'append_f', 'interleave_f', 'map2_f', 'zip_f', 'unzip_f', 'concat_f',
+    'flatten_f',
+    
+    
+    'tabulate_u', 'length_u', 'nth_u', 'index_u', 'find_u', 'min_u', 'max_u',
+    'reverse_u', 'copy_of_u', 'split_at_u', 'take_u',
+    'drop_u', 'any_u', 'all_u', 'map_u', 'foreach_u', 'partition_u',
+    'filter_u', 'remove_u', 'is_ordered_u',
+    
+    'append_u', 'interleave_u', 'map2_u', 'zip_u', 'unzip_u', 'concat_u',
+    
+    
+    'tabulate_lc', 'length_lc', 'nth_lc', 'index_lc', 'find_lc', 'min_lc',
+    'max_lc', 'reverse_lc', 'copy_of_lc', 'take_lc', 'drop_lc', 'split_at_lc',
+    'any_lc', 'all_lc', 'map_lc', 'foreach_lc', 'filter_lc', 'remove_lc',
+    'partition_lc', 'is_ordered_lc',
+    'append_lc', 'interleave_lc', 'map2_lc', 'zip_lc', 'unzip_lc',
+    'concat_lc',
+    
+    
+    'tabulate_imap', 'nth_islice', 'take_islice', 'drop_islice',
+    'split_at_islice', 'concat_chain',
+    
+    
+    'any_lpv', 'all_lpv', 'map_yv', 'foreach_yv', 'fold_left_lpv',
+    'fold_right_lpv', 'append_lpv', 'zip_yv',
+    'map_lpv', 'foreach_lpv', 'fold_left_yv', 'fold_right_yv', 'zip_lpv',
+    'any_yv', 'all_yv', 'append_yv', 'any_fv', 'all_fv', 'map_fv',
+    'foreach_fv', 'zip_fv', 'append_fv', 'append_lcv', 'map_lcv',
+    'foreach_lcv', 'zip_fv', 'any_lcv', 'all_lcv'
+    ]
 
 
 MODULE_LOGGER = logging.getLogger(__name__)
