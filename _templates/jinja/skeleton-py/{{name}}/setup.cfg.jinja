@@ -1,0 +1,127 @@
+[metadata]
+name = {{parent}}.{{project}}
+version = {{version}}
+description = {{description}}
+long_description = file: README{{readmeext}}, HISTORY{{readmeext}}
+##note content type: text/plain, text/x-rst, or text/markdown
+long_description_content_type = text/x-rst
+keywords = demo, development, {{project}}
+url = https://{{repohost}}/{{repoacct}}/{{parent}}
+download_url = https://{{repohost}}/{{repoacct}}/{{parent}}/archive/master.zip
+#project_urls =
+#    Bug Tracker = https://{{repohost}}/{{repoacct}}/{{parent}}/issues
+author = {{author|default(repoacct)}}
+author_email = {{email|default("{0}-codelab@yahoo.com".format(repoacct))}}
+#maintainer = {{maintainer|default(repoacct)}}
+#maintainer_email = {{maintaineremail|default("{0}-codelab@yahoo.com".format(repoacct))}}
+license = {{license}}
+license_files = LICENSE
+##note: license classifiers
+##  "Apache-2.0": "License :: OSI Approved :: Apache Software License"
+##  "MIT": "License :: OSI Approved :: MIT License"
+##	"BSD-3-Clause": "License :: OSI Approved :: BSD License"
+##	"GPL-3.0+": "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)"
+##	"ISC": "License :: OSI Approved :: ISC License (ISCL)"
+##	"Unlicense": "License :: Public Domain"
+classifiers = 
+	Natural Language :: English
+	Development Status :: 3 - Alpha
+	Intended Audience :: Developers
+	License :: OSI Approved :: Apache Software License
+	Programming Language :: Python
+	Programming Language :: Python :: 3
+	Programming Language :: Python :: Implementation :: Jython
+	Topic :: Software Development
+platforms = any
+
+[options]
+zip_safe = True
+python_requires = >=3.8
+install_requires = 
+	wheel==0.34.2
+	importlib-metadata==1.7.0; python_version < "3.8"
+	{% if 'yes' == executable %}click==7.1.2
+	configparser==5.0.0
+	pyyaml==5.3.1
+	toml==0.10.1{% endif %}
+# note: MANIFEST.in w/ include_package_data=True
+include_package_data = True
+packages = find:
+#packages = find_namespace:
+#package_dir = =.
+
+#[options.packages.find]
+#exclude = build*, dist*, docs*, tests*, *.tests, tools*
+
+[options.extras_require]
+setup = coverage[toml]==5.1; pylint==2.5.3; pycodestyle==2.7.0; pydocstyle==5.0.2; Sphinx==3.1.1
+test = pytest==5.4.3; pytest-timeout==1.4.2; nose2==0.10.0; hypothesis==5.19.0
+dev = check-manifest==0.42
+
+{% if 'yes' != executable %}#{% endif %}[options.entry_points]
+{% if 'yes' != executable %}#{% endif %}console_scripts =
+{% if 'yes' != executable %}#{% endif %}	{{parent}} = {{parent}}.{{project}}.cli:main
+
+[aliases]
+## Define setup.py command aliases here
+#test = pytest
+
+[sdist]
+formats = gztar zip
+
+[bdist_wheel]
+universal = 1
+
+#[build_sphinx]
+#build_dir = build/sphinx
+
+[build_ext]
+build_lib = .
+
+[develop]
+build_directory = build
+install_dir = build/Lib
+user = True
+no_deps = True
+
+
+## .bumpversion.cfg in cur dir
+## or [bumpversion[:___]] section in setup.cfg
+[bumpversion]
+current_version = {{version}}
+commit = True
+tag = True
+
+[bumpversion:file:setup.cfg]
+#search = __version__ = '{current_version}'
+#replace = __version__ = '{new_version}'
+search = version = {current_version}
+replace = version = {new_version}
+
+
+## .flake8 in cur dir or ~/[.config/]flake8
+## or [flake8] section in setup.cfg
+[flake8]
+max_line_length = 140
+exclude = .hg,.git,build,_build,dist,docs,*/tests/*
+ignore = E401,E251,W391,E302
+statistics = True
+max_complexity = 5
+
+
+## .pycodestyle in cur dir or ~/.config/pycodestyle
+## or [pycodestyle] section in setup.cfg
+[pycodestyle]
+max_line_length = 140
+exclude = .hg,.git,build,_build,dist,docs,*/tests/*
+ignore = E401,E251,W391,E302
+statistics = True
+
+
+## .pydocstyle in cur or any parent dir
+## or [pydocstyle] section in setup.cfg
+[pydocstyle]
+inherit = False
+#match = .*\.py
+match = .*/(?!.*_test)(?!test_).*\.py
+ignore = D300,D103,D102,D101,D105

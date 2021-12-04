@@ -1,0 +1,56 @@
+# Multi-package project Makefile script.
+.POSIX:
+help:
+
+#MAKE = make # (GNU make variants: make (Linux) gmake (FreeBSD)
+# [python[2|3]|jython]
+PYTHON = python
+INVOKE = $(PYTHON) -m invoke
+
+parent = {{parent}}
+SUBDIRS = common app
+
+.PHONY: build help clean test develop install
+help: $(SUBDIRS)
+	-for dirX in $^ ; do \
+		(cd $$dirX ; $(INVOKE) `echo $@ | tr _ -` $(OPTS)) ; done
+	@echo "##### Top-level multiproject: $(parent) #####"
+	@echo "Usage: $(MAKE) [SUBDIRS=$(SUBDIRS)] [PYTHON=$(PYTHON)] [target] --- some valid targets:"
+build develop install: $(SUBDIRS)
+	-for dirX in $^ ; do \
+		(cd $$dirX ; $(INVOKE) `echo $@ | tr _ -` $(OPTS)) ; done
+clean: $(SUBDIRS)
+	-for dirX in $^ ; do \
+		(cd $$dirX ; $(INVOKE) `echo $@ | tr _ -` $(OPTS)) ; done
+	-rm -fr core* *~ .*~ build/* *.log */*.log __pycache__ *.pyc *.class
+test: $(SUBDIRS)
+	-for dirX in $^ ; do \
+		(cd $$dirX ; $(INVOKE) `echo $@ | tr _ -` $(TOPTS)) ; done
+
+#----------------------------------------
+FMTS ?= tar.gz,zip
+distdir = $(parent)-0.1.0
+
+.PHONY: dist doc lint report bdist_jar copyreqs zipreqs
+dist: $(SUBDIRS)
+	-@mkdir -p build/$(distdir) ; cp -f exclude.lst build/
+#	#-zip -9 -q --exclude @exclude.lst -r - . | unzip -od build/$(distdir) -
+	-tar --format=posix --dereference --exclude-from=exclude.lst -cf - . | tar -xpf - -C build/$(distdir)
+	
+	-@for fmt in `echo $(FMTS) | tr ',' ' '` ; do \
+		case $$fmt in \
+			zip) echo "### build/$(distdir).zip ###" ; \
+				rm -f build/$(distdir).zip ; \
+				(cd build ; zip -9 -q -r $(distdir).zip $(distdir)) ;; \
+			*) tarext=`echo $$fmt | grep -e '^tar$$' -e '^tar.xz$$' -e '^tar.zst$$' -e '^tar.bz2$$' || echo tar.gz` ; \
+				echo "### build/$(distdir).$$tarext ###" ; \
+				rm -f build/$(distdir).$$tarext ; \
+				(cd build ; tar --posix -L -caf $(distdir).$$tarext $(distdir)) ;; \
+		esac \
+	done
+	-@rm -r build/$(distdir)
+	-for dirX in $^ ; do \
+		(cd $$dirX ; $(INVOKE) `echo build | tr _ -` $(OPTS)) ; done
+doc lint report bdist_jar copyreqs zipreqs: $(SUBDIRS)
+	-for dirX in $^ ; do \
+		(cd $$dirX ; $(INVOKE) `echo $@ | tr _ -` $(OPTS)) ; done

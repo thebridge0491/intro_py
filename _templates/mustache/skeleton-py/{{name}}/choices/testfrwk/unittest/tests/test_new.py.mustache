@@ -4,7 +4,7 @@ from __future__ import (absolute_import, division, print_function,
     unicode_literals)
 
 import sys, unittest
-from future.builtins import (ascii, filter, hex, map, oct, zip)
+#from builtins import (ascii, filter, hex, map, oct, zip)
 
 def setUpModule():
     #print('Setup module: {0}'.format(__name__))

@@ -1,0 +1,19 @@
+{
+  "projectregex": "^[a-zA-Z][_a-zA-Z0-9.-]+$",
+  "project": "simple-project",
+  "description": "Simple project.",
+  "version": "0.1.0",
+  
+  "repohost": "bitbucket.org",
+  "repoacct": "imcomputer",
+  "date": "2012-08-01",
+  
+  "year": "{{cookiecutter.date.split('-')[0]}}",
+  
+  "name": "{{cookiecutter.parent|default('')}}{{cookiecutter.separator|default('')}}{{cookiecutter.project}}",
+  "projectcap": "{{cookiecutter.project|capitalize}}",
+  
+  "readmeext": [".rst", ".md", ".adoc"],
+  "license": ["Apache-2.0", "MIT", "BSD-3-Clause", "GPL-3.0+", "ISC", 
+      "Unlicense", "Not open source"]
+}

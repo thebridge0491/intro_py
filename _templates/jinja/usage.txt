@@ -1,0 +1,86 @@
+Templates for initializing project structure.
+
+Install packages for chosen rendering script:
+  
+  (python) pip install [--user] jinja2 [copier] [cookiecutter]
+
+Example usage:
+  
+  python -m cookiecutter [--no-input] cookiecutter-py [date=2013-05-05]
+  
+  python -m copier.cli [--data date=2013-05-05] copy skeleton-py intro_py-util
+  
+  python render_jinja.py [--data data.yaml] skeleton-py [--kvset date=2013-10-01]
+  
+  #resulting project structure
+  
+  echo #---------- ; tree -aF --dirsfirst --matchdirs -I build intro_py-util
+
+#----------
+intro_py-util
+├── docs/
+│   ├── _static/
+│   │   └── .keep
+│   ├── _templates/
+│   │   └── .keep
+│   ├── conf.py
+│   ├── history.rst
+│   ├── index.rst
+│   └── readme.rst
+├── intro_py/
+│   ├── util/
+│   │   ├── resources/
+│   │   │   ├── greet.txt
+│   │   │   ├── hypothesis.json
+│   │   │   ├── logging.{conf,json,yaml}
+│   │   │   ├── prac.{conf,json,toml,xml,yaml}
+│   │   ├── tests/
+│   │   │   ├── __init__.py
+│   │   │   ├── __main__.py
+│   │   │   ├── test_classic.py
+│   │   │   ├── test_new.py
+│   │   │   ├── test_props_classic.py
+│   │   │   ├── test_props_new.py
+│   │   │   └── ts_main.py
+│   │   ├── __init__.py
+│   │   ├── classic.py
+│   │   ├── lib.py
+│   │   ├── person.py
+│   │  [├── __main__.py]
+│   │  [└── cli.py]
+│   └── __init__.py
+|-- [.copier-answers.yaml]
+├── .editorconfig
+├── .{git,hg}ignore
+├── .pycheckrc
+├── HISTORY.rst
+├── LICENSE
+├── MANIFEST.in
+├── Makefile-auxffi.mk
+├── README.rst
+├── exclude.lst
+├── nose2.cfg
+├── pyproject.toml
+├── requirements-internal.txt
+├── requirements.txt
+├── setup.cfg
+├── setup.py
+└── setup_addcmds.py
+
+7 directories, 46 files
+  
+  python render_jinja.py skeleton-simple
+  
+  echo #---------- ; tree -aF --dirsfirst --matchdirs -I build simple-project
+
+#----------
+simple-project
+|-- [.copier-answers.yaml]
+|-- .editorconfig
+|-- .{git,hg}ignore
+|-- LICENSE
+|-- README.rst
+|-- exclude.lst
+`-- vcs_bkup.sh
+
+0 directories, 7 files

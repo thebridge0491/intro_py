@@ -1,0 +1,53 @@
+#!/bin/sh
+
+mkdir -p build ; cp -R choices build/
+rm -r choices
+
+proj_dir=`pwd`
+readmeext={{readmeext | default('.rst')}}
+license={{license | default('Apache-2.0')}}
+buildtool={{buildtool | default('make')}}
+testfrwk={{testfrwk | default('unittest')}}
+executable={{executable | default('no')}}
+ffilib={{ffilib | default('none')}}
+
+nesteddirs={{nesteddirs | default('intro_py/util')}}
+parent={{parent | default('intro_py')}}
+
+cp build/choices/readme/README${readmeext} README${readmeext}
+if [ -d build/choices/_parent_readme ] ; then
+    cp build/choices/_parent_readme/README${readmeext} \
+	    build/choices/_parent_init/README${readmeext} ;
+fi
+
+if [ ! 'Not open source' = "${license}" ] ; then
+    cp build/choices/license/LICENSE_${license} LICENSE ;
+fi
+
+if [ -d build/choices/build_tool ] && [ ! 'make' = "${buildtool}" ] ; then
+	cp -R build/choices/build_tool/${buildtool}/* . ;
+elif [ -d build/choices/build_tool ] ; then # default: make
+	cp -R build/choices/build_tool/make/* . ;
+fi
+
+if [ -d build/choices/testfrwk ] && [ ! "unittest" = "${testfrwk}" ] ; then
+	cp -R build/choices/testfrwk/${testfrwk}/* . ;
+elif [ -d build/choices/testfrwk ] ; then # default: unittest
+	cp -R build/choices/testfrwk/unittest/* . ;
+fi
+
+if [ -d ${nesteddirs} ] && [ ! "yes" = "${executable}" ] ; then
+    rm ${nesteddirs}/__main__.py ${nesteddirs}/cli.py ;
+fi
+
+if [ -d build/choices/ffi_lib ] && [ '' = "$(echo "${ffilib}" | grep -E 'none')" ] ; then
+	cp -R build/choices/ffi_lib/${ffilib}/* ${nesteddirs}/ ;
+fi
+
+if [ -d '../_templates' ] ; then
+	skeletondir={{_template|default('$HOME/Templates/jinja/skeleton-py')}} ;
+	skel_pardir=`dirname ${skeletondir}` ;
+	rm -fr ../_templates/jinja/`basename ${skeletondir}` ;
+	mkdir -p ../_templates/jinja ;
+	cp -R ${skel_pardir}/render_jinja.* ${skeletondir} ../_templates/jinja/ ;
+fi

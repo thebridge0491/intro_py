@@ -30,32 +30,35 @@ for line in sys.stdin:
 endef
 export PRINT_HELP_PYSCRIPT
 
-.PHONY: help build clean test develop install dist build_sphinx
+.PHONY: help build clean test develop install dist doc
 help: ## help info: make [DEBUG=1] [PYTHON=python] [target]
 	-@for fileX in $(MAKEFILE_LIST) ; do \
 		$(PYTHON) -c "$$PRINT_HELP_PYSCRIPT" < $$fileX ; done
-build: ## build package [DEBUG=1] [ARGS=""]
-	$(PYTHON) setup.py $@ $(ARGS)
-clean: ## clean build artifacts [ARGS=""]
-	$(PYTHON) setup.py $@ $(ARGS)
+build: ## build package [DEBUG=1] [OPTS=""]
+	$(PYTHON) -m build --no-isolation $(OPTS)
+clean: ## clean build artifacts [OPTS=""]
+	$(PYTHON) setup.py $@ $(OPTS)
 test: ## run tests [DEBUG=1] [TOPTS=""]
-	$(PYTHON) setup.py $@ $(TOPTS)
-develop: ## to user's Python site-packages, python setup.py develop [ARGS=""]
-	$(PYTHON) setup.py $@ $(ARGS) ; $(PYTHON) -m pip show $(proj)
-install: ## to Python's site-packages, python setup.py install [ARGS=""]
-	$(PYTHON) setup.py $@ $(ARGS) ; $(PYTHON) -m pip show $(proj)
+	$(PYTHON) -m unittest discover $(TOPTS)
+develop: ## to user's Python site-packages, pip install --user [OPTS=""] -e .
+#	$(PYTHON) setup.py $@ $(OPTS) ; $(PYTHON) -m pip show $(proj)
+	$(PYTHON) -m pip install --no-deps --no-build-isolation --user $(OPTS) -e .
+	$(PYTHON) -m pip show $(proj)
+install: ## to Python's site-packages, pip install --user [OPTS=""] .
+	$(PYTHON) -m pip install --no-deps --no-build-isolation --user $(OPTS) .
+	$(PYTHON) -m pip show $(proj)
 
-dist: ## create source ([FMTS=gztar,zip]) and wheel distributions
-	$(PYTHON) setup.py sdist --formats $(FMTS)
-	$(PYTHON) setup.py bdist_wheel
+dist: ## create source and wheel distributions
+	$(PYTHON) -m build --no-isolation
 	ls -l dist
-build_sphinx: ## generate documentation [ARGS=""] (Sphinx HTML w/ API docs)
-#	$(PYTHON) -m sphinx.quickstart -p '{{parentcap}}{{^parentcap}}Intro_py{{/parentcap}}{{joiner}}{{^joiner}}.{{/joiner}}{{projectcap}}{{^projectcap}}Util{{/projectcap}}' -a '{{author}}{{^author}}{{^repoacct}}imcomputer{{/repoacct}}{{/author}}' -v {{version}}{{^version}}0.1.0{{/version}} --no-batchfile --no-makefile --ext-autodoc --ext-viewcode -q docs
-	$(PYTHON) -m sphinx.apidoc -f -o docs/ $(parent)
-	$(PYTHON) setup.py $@ $(ARGS)
+doc: ## generate documentation [OPTS=""] (Sphinx HTML w/ API docs)
+#	$(PYTHON) -m sphinx.cmd.quickstart -p '{{parentcap}}{{^parentcap}}Intro_py{{/parentcap}}{{joiner}}{{^joiner}}.{{/joiner}}{{projectcap}}{{^projectcap}}Util{{/projectcap}}' -a '{{author}}{{^author}}{{^repoacct}}imcomputer{{/repoacct}}{{/author}}' -v {{version}}{{^version}}0.1.0{{/version}}
+#		--no-batchfile --no-makefile --ext-autodoc --ext-viewcode -q docs
+	$(PYTHON) -m sphinx.ext.apidoc -f -o docs/ $(parent)
+	$(PYTHON) -m sphinx.cmd.build -b html $(OPTS) docs docs/_build
 
 
-ZIPOPTS := $(ZIPOPTS) -9 -q --exclude @$PWD/exclude.lst
+ZIPOPTS := $(ZIPOPTS) -9 -q --exclude @${PWD}/exclude.lst
 
 define BROWSER_PYSCRIPT
 import os, webbrowser, sys
@@ -72,15 +75,15 @@ export BROWSER_PYSCRIPT
 #BROWSER := $(PYTHON) -c "$$BROWSER_PYSCRIPT"
 BROWSER := w3m -M
 
-.PHONY: pychecker pylint flake8 pep8 pep257 report html xml bdist_jar copyreqs zipreqs twine tox servedocs
-pychecker: ## check style [ARGS=""] with pychecker
-	$(PYTHON) -m pychecker.checker $(ARGS) `find $(parent) -name '*.py' -a ! -name '__main__.py'`
-pylint: ## check style [ARGS=""] with pylint
-	$(PYTHON) -m pylint --rcfile setup.cfg $(ARGS) $(proj)
-flake8 pep8 pep257: ## check style [ARGS=""] with [flake8 | pep8 | pep257]
-	$(PYTHON) -m $@ $(ARGS) `find $(parent) -name '*.py'`
-report html xml: ## report code coverage [ARGS=""]
-	$(PYTHON) -m coverage combine ; $(PYTHON) -m coverage $@ $(ARGS)
+.PHONY: pylint flake8 pycodestyle pydocstyle pychecker report html xml bdist_jar copyreqs zipreqs twine tox servedocs
+pylint: ## lint style [OPTS=""] with pylint
+	$(PYTHON) -m pylint $(OPTS) $(proj)
+flake8 pycodestyle pydocstyle: ## lint style [OPTS=""] with [flake8 | pycodestyle | pydocstyle]
+	$(PYTHON) -m $@ $(OPTS) `find $(parent) -name '*.py'`
+pychecker: ## lint style [OPTS=""] with pychecker
+	$(PYTHON) -m pychecker.checker $(OPTS) `find $(parent) -name '*.py' -a ! -name '__main__.py'`
+report html xml: ## report code coverage [OPTS=""]
+	$(PYTHON) -m coverage combine ; $(PYTHON) -m coverage $@ $(OPTS)
 	if [ "$@" = "html"] && [ -e "htmlcov/index.html" ] ; then \
 		$(BROWSER) htmlcov/index.html ; fi
 
@@ -90,14 +93,14 @@ bdist_jar: ## create jar distribution
 		org.python.util.JarRunner $(proj).* ;
 	-zip $(ZIPOPTS) -r dist/$(proj)-$(version).jar .
 build/pylib copyreqs: ## copy requirements to build/pylib
-	-$(PYTHON) -m pip install -I -t build/pylib/site-packages -r requirements.txt
-	-$(PYTHON) -m pip install -U -I --no-deps -t build/pylib -r requirements-internal.txt
-	-find build/pylib -type d -name '*-info' -delete
+	-$(PYTHON) -m pip install -U --no-deps --no-build-isolation -t build/pylib -r requirements-internal.txt
+	-$(PYTHON) -m pip install -U -t build/pylib/site-packages -r requirements.txt
+	-find build/pylib -type d -name '*-info' -exec rm -fr {} \;
 zipreqs: build/pylib ## zip requirements to [wheel|jar] distribution
-	-for archive in `ls $PWD/dist/$(proj)*.whl $PWD/dist/$(proj)*.jar` ; do \
-		(cd build/pylib ; zip $(ZIPOPTS) -r $$archive * ; \
-		zip $(ZIPOPTS) -d $$archive site-packages/copyreg\*) ; \
-		(cd $(namespace_path)/tests ; zip $(ZIPOPTS) -r $$archive __main__.py) ; \
+	mkdir -p build/pylib
+	cp $(namespace_path)/tests/__main__.py build/pylib/
+	-for archive in `pwd`/dist/$(proj)*.whl `pwd`/dist/$(proj)*.jar ; do \
+		(cd build/pylib ; zip $(ZIPOPTS) -r $$archive *) ; \
 	done
 
 twine: dist ## register|upload a release
@@ -105,4 +108,4 @@ twine: dist ## register|upload a release
 tox: ## for every Python version, run tests [TOPTS="-h"]
 	$(PYTHON) -m tox $(TOPTS)
 servedocs: docs ## compile the docs watching for changes
-	$(PYTHON) -m watchdog.watchmedo shell-command -p '*.rst' -c '$(PYTHON) setup.py build_sphinx' -R -D .
+	$(PYTHON) -m watchdog.watchmedo shell-command -p '*.rst' -c '$(PYTHON) -m sphinx.cmd.build -b html docs docs/_build' -R -D .

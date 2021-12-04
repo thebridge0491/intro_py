@@ -1,0 +1,33 @@
+parentregex = "^[a-z][-_a-z0-9]+$"
+projectregex = "^[a-z][_a-z0-9]+$"
+separator = "-"
+joiner = "."
+groupid = false
+category = false
+parent = "intro_py"
+parentdescription = "Multi-package project Intro examples for Python."
+project = "util"
+description = "Utilities sub-package for Python Intro examples project."
+version = "0.1.0"
+
+repohost = "bitbucket.org"
+repoacct = "imcomputer"
+date = "2013-05-05"
+
+readmeext = ".rst"
+license = "Apache-2.0"
+buildtool = "make"
+testfrwk = "unittest"
+
+ffilib = "none"
+
+skeletondir = "Templates/mustache/skeleton-py"
+
+[_choices]
+readmeext = [".rst", ".md", ".adoc"]
+license = ["Apache-2.0", "MIT", "BSD-3-Clause", "GPL-3.0+", "ISC", "Unlicense",
+  "Not open source"]
+buildtool = ["make", "invoke"]
+testfrwk = ["unittest", "pytest", "nose2"]
+executable = ["no", "yes"]
+ffilib = ["none", "ctypes", "cffi", "swig", "jna"]

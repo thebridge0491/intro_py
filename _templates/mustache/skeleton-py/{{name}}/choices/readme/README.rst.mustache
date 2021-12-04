@@ -3,7 +3,7 @@
 .. .rst to .html: rst2html5 foo.rst > foo.html
 ..                pandoc -s -f rst -t html5 -o foo.html foo.rst
 
-{{description}}{{^description}}Utilites sub-package for Python Intro examples project.{{/description}}
+{{description}}{{^description}}Utilities sub-package for Python Intro examples project.{{/description}}
 
 Installation
 ------------
@@ -19,9 +19,11 @@ version control repository clone:
         
         git clone https://{{repohost}}{{^repohost}}bitbucket.org{{/repohost}}/{{repoacct}}{{^repoacct}}imcomputer{{/repoacct}}/{{parent}}{{^parent}}intro_py{{/parent}}.git
 
-cd <path> ; pip install --user -e .
+pip install --user -r <path>/requirements.txt
 
-python setup.py test
+cd <path> ; pip install --user . --no-deps [--no-build-isolation]
+
+python -m unittest discover
 
 Usage
 -----

@@ -5,12 +5,11 @@ PREFIX = /usr/local
 DEBUG = 0
 
 # Single package Makefile script.
-#.SUFFIXES: .s .o .a .h .c
 help:
 
 # [python[2|3]|jython]
 PYTHON = python
-#PYTHONUSERBASE = $(PREFIX)/lib/python2.7/site-packages
+#PYTHONUSERBASE = $(PREFIX)/lib/python3.8/site-packages
 
 pkg = {{project}}{{^project}}util{{/project}}
 parent = {{parent}}{{^parent}}intro_py{{/parent}}
@@ -20,30 +19,38 @@ namespace_path = $(shell echo $(proj) | sed 'y|.|/|')
 version = $(shell $(PYTHON) setup.py --version)
 ver_major = $(shell echo $(version) | cut -d'.' -f1)
 
-.PHONY: help build clean test develop install bdist_wheel sdist build_sphinx
+.PHONY: help build clean test develop install doc
 help: ## help
 	@echo "##### subproject: $(proj) #####"
 	@echo "Usage: $(MAKE) [PYTHON=$(PYTHON)] [target] -- some valid targets:"
-	$(PYTHON) setup.py --help-commands
-build: ## build package [DEBUG=1] [ARGS=""]
-	$(PYTHON) setup.py $@ $(ARGS)
-clean: ## clean build artifacts [ARGS=""]
-	$(PYTHON) setup.py $@ $(ARGS)
+#	-@for fileX in $(MAKEFILE_LIST) `if [ -z "$(MAKEFILE_LIST)" ] ; then echo Makefile Makefile-addcmds.mk ; fi` ; do \
+#		grep -ve '^[A-Z]' $$fileX | awk '/^[^.%][-A-Za-z0-9_]+[ ]*:.*$$/ { print "...", substr($$1, 1, length($$1)) }' | sort ; \
+#	done
+	-@for fileX in $(MAKEFILE_LIST) `if [ -z "$(MAKEFILE_LIST)" ] ; then echo Makefile Makefile-addcmds.mk ; fi` ; do \
+		grep -E '^[ a-zA-Z_-]+:.*?## .*$$' $$fileX | \
+		awk 'BEGIN {FS = ":.*?## "}; {printf "%-25s%s\n", $$1, $$2}' ; \
+	done
+build: ##  build artifacts (create [source|wheel] distribution) [OPTS=""]
+	$(PYTHON) -m build --no-isolation $(OPTS)
+clean: ## clean build artifacts [OPTS=""]
+	$(PYTHON) setup.py $@ $(OPTS)
 test: ## run tests [DEBUG=1] [TOPTS=""]
 #	export [DY]LD_LIBRARY_PATH=. # ([da|ba|z]sh Linux)
 #	setenv [DY]LD_LIBRARY_PATH . # (tcsh FreeBSD)
-	-LD_LIBRARY_PATH=$(LD_LIBRARY_PATH):build/lib $(PYTHON) setup.py $@ $(TOPTS)
-develop: ## to user's Python site-packages, python setup.py develop [ARGS=""]
-	$(PYTHON) setup.py $@ $(ARGS)
-install: ## to Python's site-packages, python setup.py install [ARGS=""]
-	$(PYTHON) setup.py $@ $(ARGS)
+	-LD_LIBRARY_PATH=$(LD_LIBRARY_PATH):build/lib $(PYTHON) -m unittest discover $(TOPTS)
+develop: ## to user's Python site-packages, pip install --user [OPTS=""] -e .
+#	$(PYTHON) setup.py develop $(OPTS)
+	$(PYTHON) -m pip install --no-deps --no-build-isolation --user $(OPTS) -e .
+	$(PYTHON) -m pip show $(proj)
+install: ## to Python's site-packages, pip install --user [OPTS=""] .
+	$(PYTHON) -m pip install --no-deps --no-build-isolation --user $(OPTS) .
+	$(PYTHON) -m pip show $(proj)
 
-bdist_wheel: ## create wheel distribution [ARGS=""]
-	$(PYTHON) setup.py $@ $(ARGS)
-sdist: ## create source distribution [ARGS=""]
-	$(PYTHON) setup.py $@ $(ARGS)
-build_sphinx: ## generate documentation [ARGS=""] (Sphinx HTML w/ API docs)
-	$(PYTHON) setup.py $@ $(ARGS)
+doc: ## generate documentation [OPTS=""] (Sphinx HTML w/ API docs)
+#	$(PYTHON) -m sphinx.cmd.quickstart -p {{parentcap}}{{^parentcap}}Intro_py{{/parentcap}}{{joiner}}{{^joiner}}.{{/joiner}}{{projectcap}}{{^projectcap}}Util{{/projectcap}} -a {{author}}{{^author}}{{^repoacct}}imcomputer{{/repoacct}}{{/author}} -v $(version) \
+#		--no-batchfile --no-makefile --ext-autodoc --ext-viewcode -q docs
+	$(PYTHON) -m sphinx.ext.apidoc -f -o docs/ $(parent)
+	$(PYTHON) -m sphinx.cmd.build -b html $(OPTS) docs docs/_build
 
 -include Makefile-addcmds.mk
 #-include Makefile-auxffi.mk

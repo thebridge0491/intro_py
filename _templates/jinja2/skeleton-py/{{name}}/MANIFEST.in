@@ -1,7 +1,0 @@
-graft ci
-graft examples
-
-recursive-include . *
-global-include **/resources/**
-
-global-exclude *.py[cod] *.so *.dylib *~ *.class *.log .DS_Store .hg/** .git/** .svn/** __pycache__/** build/** dist/** temp/** .jip*/** javalib/** .hypothesis/** .cache/** .pytest_cache/** .eggs/**

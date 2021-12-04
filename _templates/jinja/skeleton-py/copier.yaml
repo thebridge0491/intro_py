@@ -1,0 +1,64 @@
+---
+# CONFIG -----
+_subdirectory: "{{name}}"
+_templates_suffix: .jinja
+_envops:
+    block_start_string: "{%"
+    block_end_string: "%}"
+    comment_start_string: "{#"
+    comment_end_string: "#}"
+    variable_start_string: "{{"
+    variable_end_string: "}}"
+    keep_trailing_newline: false
+_answers_file: .copier-answers.yaml
+_tasks:
+  - python choices/post_gen_project.py
+
+# PROMPTS -----
+parent: {type: str, help: 'Enter parent name?', default: intro_py}
+parentdescription: {type: str, help: Enter project's parent description, default: Multi-package project Intro examples for Python.}
+project: {type: str, help: Enter project name, default: util}
+description: {type: str, help: Enter project description, default: Utilities sub-package for Python Intro examples project.}
+version: {type: str, help: Enter project version, default: 0.1.0}
+
+repohost: {type: str, help: Enter project repo host, default: bitbucket.org}
+repoacct: {type: str, help: Enter project repo account, default: imcomputer}
+date: {type: str, help: Enter project start date, default: 2012-08-01}
+
+author: {type: str, help: Enter project author, default: "{{repoacct}}"}
+email: {type: str, help: Enter project author email,
+  default: "{{repoacct}}-codelab@yahoo.com"}
+maintainer: {type: str, help: Enter project maintainer,
+  default: "{{repoacct}}"}
+maintaineremail: {type: str, help: Enter project maintainer email,
+  default: "{{repoacct}}-codelab@yahoo.com"}
+year: {type: str, help: Enter project start year,
+  default: "{{date.split('-')[0]}}"}
+
+name: {type: str, help: Enter package name,
+  default: "{{parent}}-{{project}}"}
+namespace: {type: str, help: Enter package namespace,
+  default: "{{parent}}.{{project}}"}
+nesteddirs: {type: str, help: Enter package nested directories,
+  default: "{{namespace|replace('.', '/')}}"}
+parentcap: {type: str, help: Enter parent name capitalized,
+  default: "{{parent|capitalize}}"}
+projectcap: {type: str, help: Enter project name capitalized,
+  default: "{{project|capitalize}}"}
+
+readmeext: {type: str, help: Choose README extension to use, default: .rst,
+  choices: [.rst, .md, .adoc]}
+license: {type: str, help: Choose license to use, default: Apache-2.0,
+  choices: [Apache-2.0, MIT, BSD-3-Clause, GPL-3.0+, ISC, Unlicense, Not open source]}
+buildtool: {type: str, help: Choose build tool to use, default: make,
+  choices: [make, invoke]}
+testfrwk: {type: str, help: Choose test framework to use, default: unittest,
+  choices: [unittest, pytest, nose2]}
+executable: {type: str, help: Choose no or yes if project has executable, 
+  default: no, choices: [no, yes]}
+ffilib: {type: str, help: Choose none or FFI library to use, default: none,
+  choices: [none, ctypes, cffi, swig, jna]}
+
+_template: {type: str, help: Enter template directory,
+  default: Templates/jinja/skeleton-py}
+...

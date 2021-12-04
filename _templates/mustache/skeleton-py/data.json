@@ -1,15 +1,15 @@
 {
+  "parentregex": "^[a-z][-_a-z0-9]+$",
+  "projectregex": "^[a-z][_a-z0-9]+$",
+  "separator": "-",
+  "joiner": ".",
   "groupid": false,
   "category": false,
   "parent": "intro_py",
   "parentdescription": "Multi-package project Intro examples for Python.",
   "project": "util",
-  "description": "Utilites sub-package for Python Intro examples project.",
+  "description": "Utilities sub-package for Python Intro examples project.",
   "version": "0.1.0",
-  "separator": "-",
-  "joiner": ".",
-  "parentregex": "^[a-z][-_a-z0-9]+$",
-  "projectregex": "^[a-z][_a-z0-9]+$",
   
   "repohost": "bitbucket.org",
   "repoacct": "imcomputer",
@@ -17,29 +17,20 @@
   
   "readmeext": ".rst",
   "license": "Apache-2.0",
-  "buildtool": "setuptools",
+  "buildtool": "make",
   "testfrwk": "unittest",
   
   "ffilib": "none",
   
   "skeletondir": "Templates/mustache/skeleton-py",
   
-  "licenseclassifiers": {
-    "Apache-2.0": "License :: OSI Approved :: Apache Software License",
-    "MIT": "License :: OSI Approved :: MIT License",
-    "BSD-3-Clause": "License :: OSI Approved :: BSD License",
-    "GPL-3.0+": "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",
-    "ISC": "License :: OSI Approved :: ISC License (ISCL)",
-    "Unlicense": "License :: Public Domain"
-  },
-  
   "_choices": {
     "readmeext": [".rst", ".md", ".adoc"],
     "license": ["Apache-2.0", "MIT", "BSD-3-Clause", "GPL-3.0+", "ISC", 
       "Unlicense", "Not open source"],
-    "buildtool": ["setuptools", "make", "invoke"],
+    "buildtool": ["make", "invoke"],
     "testfrwk": ["unittest", "pytest", "nose2"],
-    "executable": [false, "yes"],
+    "executable": ["no", "yes"],
     "ffilib": ["none", "ctypes", "cffi", "swig", "jna"]
   }
 }

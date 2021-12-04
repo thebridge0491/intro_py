@@ -1,0 +1,39 @@
+---
+# CONFIG -----
+_subdirectory: "{{name}}"
+_templates_suffix: .jinja
+_envops:
+    block_start_string: "{%"
+    block_end_string: "%}"
+    comment_start_string: "{#"
+    comment_end_string: "#}"
+    variable_start_string: "{{"
+    variable_end_string: "}}"
+    keep_trailing_newline: false
+_answers_file: .copier-answers.yaml
+_tasks:
+  - python choices/post_gen_project.py
+
+# PROMPTS -----
+#parent: {type: str, help: Enter parent name?, default: sample_py}
+project: {type: str, help: Enter project name, default: simple-project}
+description: {type: str, help: Enter project description, default: Simple project.}
+version: {type: str, help: Enter project version, default: 0.1.0}
+
+repohost: {type: str, help: Enter project repo host, default: bitbucket.org}
+repoacct: {type: str, help: Enter project repo account, default: imcomputer}
+date: {type: str, help: Enter project start date, default: 2012-08-01}
+
+year: {type: str, help: Enter project start year, default: "{{date.split('-')[0]}}"}
+
+projectcap: {type: str, help: Enter project name capitalized,
+  default: "{{project|capitalize}}"}
+
+readmeext: {type: str, help: Choose README extension to use, default: .rst,
+  choices: [.rst, .md, .adoc]}
+license: {type: str, help: Choose license to use, default: Apache-2.0,
+  choices: [Apache-2.0, MIT, BSD-3-Clause, GPL-3.0+, ISC, Unlicense, Not open source]}
+
+_template: {type: str, help: Enter template directory,
+  default: Templates/jinja/skeleton-simple}
+...
