@@ -22,7 +22,7 @@ py==1.11.0                # via pytest
 pyparsing==3.0.6          # via packaging
 pytest==5.4.3             # via intro-py.intro (setup.py), pytest-timeout
 pytest-timeout==1.4.2     # via intro-py.intro (setup.py)
-pyyaml==5.3.1             # via intro-py.intro (setup.py)
+pyyaml==5.4             # via intro-py.intro (setup.py)
 six==1.16.0               # via nose2
 sortedcontainers==2.4.0   # via hypothesis
 toml==0.10.1              # via intro-py.intro (setup.py)
