@@ -97,3 +97,5 @@ Packages/
 .build/
 Package.resolved
 *.xcworkspace
+
+**/resources/explore/*/
