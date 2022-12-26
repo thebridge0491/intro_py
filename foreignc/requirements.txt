@@ -20,4 +20,4 @@ pytest==7.2.0             # via intro-py.foreignc (setup.py), pytest-timeout
 pytest-timeout==2.1.0     # via intro-py.foreignc (setup.py)
 sortedcontainers==2.4.0   # via hypothesis
 tomli==2.0.1              # via pytest
-wheel==0.34.2             # via intro-py-util, intro-py.foreignc (setup.py)
+wheel==0.38.1             # via intro-py-util, intro-py.foreignc (setup.py)
