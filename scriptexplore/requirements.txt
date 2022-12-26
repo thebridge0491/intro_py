@@ -18,4 +18,4 @@ pytest-timeout==1.4.2     # via intro-py.scriptexplore (setup.py)
 six==1.16.0               # via nose2
 sortedcontainers==2.4.0   # via hypothesis
 wcwidth==0.2.5            # via pytest
-wheel==0.34.2             # via intro-py.scriptexplore (setup.py)
+wheel==0.38.1             # via intro-py.scriptexplore (setup.py)
