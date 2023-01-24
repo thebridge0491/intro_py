@@ -202,10 +202,10 @@ def rem_m(num_a, num_b): return quot_rem(num_a, num_b)[1]
 def euclid_i(num_m, num_n):
     def iter(a, b):
         return a if 0 == b else iter(b, a % b)
-    return iter(num_m, num_n)
+    return abs(iter(num_m, num_n))
 
 def euclid_r(num_m, num_n):
-    return num_m if 0 == num_n else euclid_r(num_n, num_m % num_n)
+    return abs(num_m) if 0 == num_n else abs(euclid_r(num_n, num_m % num_n))
 
 def euclid_lp(num_m, num_n):
     acc, b, swap = num_m, num_n, 0
@@ -213,22 +213,22 @@ def euclid_lp(num_m, num_n):
         swap = acc
         acc = b
         b = swap % b
-    return acc
+    return abs(acc)
 
 def gcd_i(nums):
     def iter(acc, rst):
         return acc if [] == rst else iter(euclid_i(acc, rst[0]), rst[1:])
-    return iter(nums[0], nums[1:])
+    return abs(iter(nums[0], nums[1:]))
 
 def gcd_r(nums):
-    return (nums[0] if 1 == len(nums) else 
+    return (abs(nums[0]) if 1 == len(nums) else 
         gcd_r([euclid_r(nums[0], nums[1])] + nums[2:]))
 
 def gcd_lp(nums):
     acc = nums[0]
     for i in range(1, len(nums)):
         acc = euclid_lp(acc, nums[i])
-    return acc
+    return abs(acc)
 
 def lcm_i(nums):
     def iter(acc, rst):
@@ -236,10 +236,10 @@ def lcm_i(nums):
         else:
             n = rst[0]
             return iter(acc * int(n / euclid_i(acc, n)), rst[1:])
-    return iter(nums[0], nums[1:])
+    return abs(iter(nums[0], nums[1:]))
 
 def lcm_r(nums):
-    if 1 == len(nums): return nums[0]
+    if 1 == len(nums): return abs(nums[0])
     else:
         m, n = nums[0], nums[1]
         return lcm_r([m * int(n / euclid_r(m, n))] + nums[2:])
@@ -248,7 +248,7 @@ def lcm_lp(nums):
     acc = nums[0]
     for i in range(1, len(nums)):
         acc = acc * int(nums[i] / euclid_lp(acc, nums[i]))
-    return acc
+    return abs(acc)
 
 def base_expand_i(base, num):
     def iter(q, acc):

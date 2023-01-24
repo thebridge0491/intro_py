@@ -51,13 +51,13 @@ def pascaltri_f(rows):
         a[-1] + [0]))], range(rows), [[1]])
 
 def gcd_f(nums):
-    import fractions
-    return reduce(fractions.gcd, nums[1:], nums[0])
+    import math
+    return abs(reduce(math.gcd, nums[1:], nums[0]))
 
 def lcm_f(nums):
-    import fractions
-    return reduce(lambda a, e: a * int(e / fractions.gcd(a, e)), nums[1:],
-        nums[0])
+    import math
+    return abs(reduce(lambda a, e: a * int(e / math.gcd(a, e)), nums[1:],
+        nums[0]))
 
 def base_expand_f(base, num):
     import math
@@ -117,26 +117,26 @@ def pascaltri_u(rows):
 #    return util.head_or(m, unfold_right_i(ufunc, (m, n)))
 
 def gcd_u(nums):
-    import fractions
+    import math
     if [] == nums: return 0
     def ufunc(acc_rst):
         (acc, rst) = acc_rst
         if [] == rst: return None
-        cur = fractions.gcd(acc, rst[0])
+        cur = math.gcd(acc, rst[0])
         return (cur, (cur, rst[1:]))
-    return util.head_or(nums[0], unfold_right_i(ufunc,
-        (nums[0], nums[1:])))
+    return abs(util.head_or(nums[0], unfold_right_i(ufunc,
+        (nums[0], nums[1:]))))
 
 def lcm_u(nums):
-    import fractions
+    import math
     if [] == nums: return 0
     def ufunc(acc_rst):
         (acc, rst) = acc_rst
         if [] == rst: return None
-        cur = acc * int(rst[0] / fractions.gcd(acc, rst[0]))
+        cur = acc * int(rst[0] / math.gcd(acc, rst[0]))
         return (cur, (cur, rst[1:]))
-    return util.head_or(nums[0], unfold_right_i(ufunc,
-        (nums[0], nums[1:])))
+    return abs(util.head_or(nums[0], unfold_right_i(ufunc,
+        (nums[0], nums[1:]))))
 
 def base_expand_u(base, num):
     def ufunc(n):
@@ -186,14 +186,14 @@ def pascaltri_lc(rows):
         for row in [list(map(operator.add, [0] + row, row + [0]))]]
 
 def gcd_lc(nums):
-    import fractions
-    return ([nums[0]] + [x for x in [nums[0]] for n in nums[1:]
-        for x in [fractions.gcd(x, n)]])[-1]
+    import math
+    return abs(([nums[0]] + [x for x in [nums[0]] for n in nums[1:]
+        for x in [math.gcd(x, n)]])[-1])
 
 def lcm_lc(nums):
-    import fractions
-    return ([nums[0]] + [x for x in [nums[0]] for n in nums[1:]
-        for x in [x * int(n / fractions.gcd(x, n))]])[-1]
+    import math
+    return abs(([nums[0]] + [x for x in [nums[0]] for n in nums[1:]
+        for x in [x * int(n / math.gcd(x, n))]])[-1])
 
 def base_expand_lc(base, num):
     import math

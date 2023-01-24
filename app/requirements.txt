@@ -24,4 +24,4 @@ pyyaml==6.0               # via intro-py.intro (setup.py)
 sortedcontainers==2.4.0   # via hypothesis
 toml==0.10.2              # via intro-py.intro (setup.py)
 tomli==2.0.1              # via pytest
-wheel==0.34.2             # via intro-py-practice, intro-py-util, intro-py.intro (setup.py)
+wheel==0.38.4             # via intro-py-practice, intro-py-util, intro-py.intro (setup.py)

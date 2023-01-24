@@ -148,19 +148,19 @@ class TestPropsClassic(unittest.TestCase):
         max_size=19), st.lists(st.integers(min_value=-500, max_value=-1),
         min_size=1, max_size=19))
     def test_prop_gcd_lcm(self, lst_pos, lst_neg):
-        import fractions
-        ans_gcd_pos = reduce(fractions.gcd, lst_pos, 0)
-        ans_lcm_pos = reduce(lambda a, e: a * int(e / fractions.gcd(a, e)),
-            lst_pos[1:], lst_pos[0])
+        import math
+        ans_gcd_pos = reduce(math.gcd, lst_pos, 0)
+        ans_lcm_pos = abs(reduce(lambda a, e: a * int(e / math.gcd(a, e)),
+            lst_pos[1:], lst_pos[0]))
         for fn_gcd, fn_lcm in [(classic.gcd_i, classic.lcm_i),
                 (classic.gcd_r, classic.lcm_r), (classic.gcd_lp, classic.lcm_lp),
                 (classic.gcd_f, classic.lcm_f), (classic.gcd_u, classic.lcm_u),
                 (classic.gcd_lc, classic.lcm_lc)]:
             self.assertEqual(ans_gcd_pos, fn_gcd(lst_pos))
             self.assertEqual(ans_lcm_pos, fn_lcm(lst_pos))
-        ans_gcd_neg = reduce(fractions.gcd, lst_neg, 0)
-        ans_lcm_neg = reduce(lambda a, e: a * int(e / fractions.gcd(a, e)),
-            lst_neg[1:], lst_neg[0])
+        ans_gcd_neg = reduce(math.gcd, lst_neg, 0)
+        ans_lcm_neg = abs(reduce(lambda a, e: a * int(e / math.gcd(a, e)),
+            lst_neg[1:], lst_neg[0]))
         for fn_gcd, fn_lcm in [(classic.gcd_i, classic.lcm_i),
                 (classic.gcd_r, classic.lcm_r), (classic.gcd_lp, classic.lcm_lp),
                 (classic.gcd_f, classic.lcm_f), (classic.gcd_u, classic.lcm_u),

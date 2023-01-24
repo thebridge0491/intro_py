@@ -127,10 +127,10 @@ class TestClassic(unittest.TestCase):
             self.assertEqual((num_a % num_b), classic.rem_m(num_a, num_b))
 
     def test_gcd_lcm(self):
-        import fractions
+        import math
         for nums in [[24, 16], [24, 16, 12], [24, 16, 32]]:
-            ans_gcd = reduce(fractions.gcd, nums[1:], nums[0])
-            ans_lcm = reduce(lambda a, e: a * int(e / fractions.gcd(a, e)),
+            ans_gcd = reduce(math.gcd, nums[1:], nums[0])
+            ans_lcm = reduce(lambda a, e: a * int(e / math.gcd(a, e)),
                 nums[1:], nums[0])
             for fn_gcd, fn_lcm in [(classic.gcd_i, classic.lcm_i),
                     (classic.gcd_r, classic.lcm_r),
